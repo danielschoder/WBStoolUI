@@ -8,7 +8,7 @@ const DrawerComponent: React.FC<{
 }> = ({ drawerOpen, setDrawerOpen }) => {
     const menuItems = [
         { label: 'Home', path: '/' },
-        { label: 'Drivers', path: '/drivers' }
+        { label: 'My Projects', path: '/projects' }
     ];
 
     return (

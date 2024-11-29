@@ -4,7 +4,7 @@ import AppBarComponent from './components/AppBarComponent';
 import DrawerComponent from './components/DrawerComponent';
 import { AuthService } from './hooks/AuthService';
 import Drivers from './pages/Drivers';
-import Home from './pages/Home';
+import ProjectEdit from './pages/ProjectEdit';
 
 const App: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -44,8 +44,8 @@ const App: React.FC = () => {
                 setDrawerOpen={setDrawerOpen}
             />
             <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/drivers" element={<Drivers />} />
+                <Route path="/" element={<ProjectEdit />} />
+                <Route path="/projects" element={<Drivers />} />
             </Routes>
         </Router>
     );

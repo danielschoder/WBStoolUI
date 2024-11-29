@@ -1,13 +1,13 @@
 import { Box, List, ListItem, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { DriverDto } from '../dtos/DriverDto';
+import { Element } from '../models/Element';
 import BaseListPage from './BaseListPage';
 
 function Drivers() {
     const navigate = useNavigate();
 
     return (
-        <BaseListPage<DriverDto>
+        <BaseListPage<Element>
             title="Drivers"
             route="/api/drivers"
             itemsName="drivers"

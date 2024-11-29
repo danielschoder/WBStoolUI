@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { LoginDto } from '../dtos/LoginDto';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
-import { AuthResponseDto } from '../dtos/AuthResponseDto';
-import { RegisterDto } from '../dtos/RegisterDto';
+import { AuthResponseDto } from '../models/AuthResponseDto';
+import { LoginDto } from '../models/LoginDto';
+import { RegisterDto } from '../models/RegisterDto';
 
 const baseUrl = 'https://schoderauth.azurewebsites.net';
 

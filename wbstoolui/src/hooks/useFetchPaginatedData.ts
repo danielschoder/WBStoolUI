@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { PaginatedResponseDto } from '../dtos/PaginatedResponseDto';
+import { PaginatedResponseDto } from '../models/PaginatedResponseDto';
 
 export function useFetchPaginatedData<T>(url: string, itemsName: string, page: number, pageSize: number) {
     const [data, setData] = useState<PaginatedResponseDto<T> | null>(null);
