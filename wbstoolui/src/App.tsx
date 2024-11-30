@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AppBarComponent from './components/AppBarComponent';
 import DrawerComponent from './components/DrawerComponent';
 import { AuthService } from './hooks/AuthService';
@@ -44,7 +44,8 @@ const App: React.FC = () => {
                 setDrawerOpen={setDrawerOpen}
             />
             <Routes>
-                <Route path="/" element={<ProjectEdit />} />
+                <Route path="/" element={<Navigate to="/projects/96b9faa7-a37b-4d4c-8b79-461979ed5080/edit" />} />
+                <Route path="/projects/:projectId/edit" element={<ProjectEdit />} />
                 <Route path="/projects" element={<Drivers />} />
             </Routes>
         </Router>
