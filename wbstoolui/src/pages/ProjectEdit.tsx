@@ -1,11 +1,10 @@
-import { Box, Container } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import Error from '../components/Error';
 import Loading from "../components/Loading";
 import { ProjectService } from "../hooks/ProjectService";
-import { ElementDto } from "../models/ElementDto";
 import { ProjectDto } from "../models/ProjectDto";
 
 const ProjectEdit = () => {
@@ -17,14 +16,12 @@ const ProjectEdit = () => {
 
     useEffect(() => {
         if (!projectId) return;
-
         const fetchProject = async () => {
             try {
                 setLoading(true);
                 setProject(await projectService.getProject(projectId));
-            } catch (err) {
+            } catch {
                 setError("Failed to fetch project.");
-                console.error(err);
             } finally {
                 setLoading(false);
             }
@@ -36,24 +33,37 @@ const ProjectEdit = () => {
     if (loading) { return <Loading />; }
     if (error) { return <Error error={error} />; }
 
-    const getExpandedItemIds = (items: ElementDto[]): string[] => {
-        let ids: string[] = [];
-        items.forEach((item) => {
-            if (item.children && item.children.length > 0) {
-                ids.push(item.id);
-                ids = ids.concat(getExpandedItemIds(item.children));
-            }
-        });
-        return ids;
+    const handleExpansionChange = (_event: React.SyntheticEvent, itemIds: string[]) => {
+        if (project) {
+            project.settings.expandedElementIds = itemIds;
+        }
     };
-    const expandedItemIds = project ? getExpandedItemIds(project.elements) : [];
+
+    const saveProject = async () => {
+        if (!project) return;
+        try {
+            await projectService.updateProject(project);
+        } catch {
+            setError("Failed to save project.");
+        }
+    };
 
     return (
         <Container>
-            <Box sx={{ marginTop: 2 }}>
+            <Box sx={{ mt: 2 }}>
                 {project && (
-                    <RichTreeView items={project.elements} defaultExpandedItems={expandedItemIds} expansionTrigger="iconContainer" />
+                    <RichTreeView
+                        items={project.elements}
+                        defaultExpandedItems={project.settings.expandedElementIds || []}
+                        onExpandedItemsChange={handleExpansionChange}
+                        expansionTrigger="iconContainer" />
                 )}
+            </Box>
+
+            <Box sx={{ mt: 2 }}>
+                <Button variant="contained" color="primary" onClick={saveProject}>
+                    Save
+                </Button>
             </Box>
         </Container>
     );
