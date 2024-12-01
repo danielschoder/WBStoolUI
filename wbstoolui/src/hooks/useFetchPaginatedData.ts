@@ -1,7 +1,18 @@
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import { PaginatedResponseDto } from '../models/PaginatedResponseDto';
 
-export function useFetchPaginatedData<T>(url: string, itemsName: string, page: number, pageSize: number) {
+function getAuthHeaders(): { Authorization: string } {
+    return { Authorization: `Bearer ${localStorage.getItem('jwt')}` };
+}
+
+export function useFetchPaginatedData<T>(
+    url: string,
+    itemsName: string,
+    page: number,
+    pageSize: number
+)
+{
     const [data, setData] = useState<PaginatedResponseDto<T> | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -9,20 +20,19 @@ export function useFetchPaginatedData<T>(url: string, itemsName: string, page: n
     useEffect(() => {
         const apiUrl = `${url}?pageNumber=${page}&pageSize=${pageSize}`;
 
-        fetch(apiUrl)
+        setLoading(true);
+        setError(null);
+
+        axios
+            .get(apiUrl, { headers: getAuthHeaders() })
             .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data: Record<string, never>) => {
-                const instance = new PaginatedResponseDto<T>(data, itemsName);
+                const instance = new PaginatedResponseDto<T>(response.data, itemsName);
                 setData(instance);
-                setLoading(false);
             })
             .catch((error) => {
                 setError(error.message);
+            })
+            .finally(() => {
                 setLoading(false);
             });
     }, [url, itemsName, page, pageSize]);

@@ -3,19 +3,22 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import AppBarComponent from './components/AppBarComponent';
 import DrawerComponent from './components/DrawerComponent';
 import { AuthService } from './hooks/AuthService';
-import Drivers from './pages/Drivers';
 import ProjectEdit from './pages/ProjectEdit';
+import Projects from './pages/Projects';
 
 const App: React.FC = () => {
+    const authService = useMemo(() => new AuthService(), []);
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(authService.isAuthenticated());
     const [isLoginDialogOpen, setOpenLoginDialog] = useState(false);
     const [isRegisterDialogOpen, setOpenRegisterDialog] = useState(false);
-    const authService = useMemo(() => new AuthService(), []);
 
     const handleLoginOpen = () => setOpenLoginDialog(true);
     const handleLoginSubmit = () => setIsAuthenticated(true);
-    const handleLogout = () => setIsAuthenticated(false);
+    const handleLogout = () => {
+        setIsAuthenticated(false);
+        authService.logout();
+    }
     const handleRegisterOpen = () => setOpenRegisterDialog(true);
     const handleRegisterSubmit = () => setIsAuthenticated(true);
 
@@ -37,16 +40,16 @@ const App: React.FC = () => {
                 setOpenRegisterDialog={setOpenRegisterDialog}
                 handleRegisterOpen={handleRegisterOpen}
                 handleRegisterSubmit={handleRegisterSubmit}
-                handleLogout={handleLogout}
             />
             <DrawerComponent
                 drawerOpen={drawerOpen}
                 setDrawerOpen={setDrawerOpen}
+                handleLogout={handleLogout}
             />
             <Routes>
-                <Route path="/" element={<Navigate to="/projects/96b9faa7-a37b-4d4c-8b79-461979ed5080/edit" />} />
+                <Route path="/" element={<Navigate to="/projects/96b9faa7-a37b-4d4c-8b79-461979ed5080/edit" replace />} />
                 <Route path="/projects/:projectId/edit" element={<ProjectEdit />} />
-                <Route path="/projects" element={<Drivers />} />
+                <Route path="/projects" element={<Projects />} />
             </Routes>
         </Router>
     );

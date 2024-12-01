@@ -5,7 +5,8 @@ import { NavLink } from 'react-router-dom';
 const DrawerComponent: React.FC<{
     drawerOpen: boolean;
     setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ drawerOpen, setDrawerOpen }) => {
+    handleLogout: () => void;
+}> = ({ drawerOpen, setDrawerOpen, handleLogout }) => {
     const menuItems = [
         { label: 'Home', path: '/' },
         { label: 'My Projects', path: '/projects' }
@@ -19,6 +20,12 @@ const DrawerComponent: React.FC<{
                         <ListItemText primary={item.label} />
                     </ListItem>
                 ))}
+                <ListItem key="Logout" component="div" onClick={() => {
+                        handleLogout();
+                        setDrawerOpen(false);
+                    }}>
+                    <ListItemText primary="Logout" />
+                </ListItem>
             </List>
         </Drawer>
     );

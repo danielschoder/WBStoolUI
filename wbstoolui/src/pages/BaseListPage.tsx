@@ -1,7 +1,7 @@
-import { Box, Button, Container, IconButton, Pagination, Typography } from '@mui/material';
+import { Box, Container, IconButton, Pagination, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import React, { useState } from 'react';
-import { baseUrl } from '../constants';
+import { baseUrlWbstool } from '../constants';
 import Error from '../components/Error';
 import Loading from '../components/Loading';
 import { useFetchPaginatedData } from '../hooks/useFetchPaginatedData';
@@ -9,20 +9,20 @@ import { useNavigate } from 'react-router-dom';
 
 interface BaseListPageProps<T> {
     title: string;
-    route: string;
+    apiRoute: string;
     itemsName: string;
     renderList: (items: T[]) => React.ReactNode;
 }
 
-function BaseListPage<T>({ title, route, itemsName, renderList } : BaseListPageProps<T>) {
+function BaseListPage<T>({ title, apiRoute, itemsName, renderList } : BaseListPageProps<T>) {
     const navigate = useNavigate();
-    const routeKey = `page_${route.slice(1)}`;
+    const routeKey = `page_${apiRoute.slice(1)}`;
     const [pageNumber, setPageNumber] = useState<number>(() => {
         const storedPage = localStorage.getItem(routeKey);
         return storedPage ? parseInt(storedPage, 10) : 1;
     });
     const [pageSize] = useState(15);
-    const { data, loading, error } = useFetchPaginatedData<T>(`${baseUrl}${route}`, itemsName, pageNumber, pageSize);
+    const { data, loading, error } = useFetchPaginatedData<T>(`${baseUrlWbstool}${apiRoute}`, itemsName, pageNumber, pageSize);
 
     if (loading) { return <Loading />; }
     if (error) { return <Error error={error} />; }
@@ -45,26 +45,13 @@ function BaseListPage<T>({ title, route, itemsName, renderList } : BaseListPageP
                 </Typography>
             </Box>
 
-            <Typography gutterBottom>
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    href={`${baseUrl}${route}?pageNumber=${pageNumber}&pageSize=${pageSize}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{ textTransform: 'lowercase' }}
-                >
-                    {route}
-                </Button>
-            </Typography>
-
             {totalPages > 1 && (
                 <Pagination
                     count={totalPages}
                     page={pageNumber}
                     onChange={handlePageChange}
                     color="primary"
-                    style={{ marginTop: '16px' }}
+                    sx={{ mt: 2 }}
                 />
             )}
 

@@ -1,21 +1,21 @@
 import axios from 'axios';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
+import { baseUrlAuth } from '../constants';
 import { AuthResponseDto } from '../models/AuthResponseDto';
 import { LoginDto } from '../models/LoginDto';
 import { RegisterDto } from '../models/RegisterDto';
-
-const baseUrl = 'https://schoderauth.azurewebsites.net';
 
 interface CustomJwtPayload extends JwtPayload {
     sub?: string;
     email?: string;
 }
+
 export class AuthService {
 
     async logVisitor(): Promise<void> {
         (async () => {
             try {
-                await axios.post(`${baseUrl}/api/visitors`, {});
+                await axios.post(`${baseUrlAuth}/api/visitors`, {});
             } catch (error) {
                 console.error('Error posting visitor data', error);
             }
@@ -24,7 +24,7 @@ export class AuthService {
 
     async login(loginDto: LoginDto): Promise<AuthResponseDto> {
         try {
-            const response = await fetch(`${baseUrl}/api/login`, {
+            const response = await fetch(`${baseUrlAuth}/api/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export class AuthService {
 
     async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
         try {
-            const response = await fetch(`${baseUrl}/api/register`, {
+            const response = await fetch(`${baseUrlAuth}/api/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

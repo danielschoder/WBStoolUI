@@ -1,13 +1,12 @@
 import axios from 'axios';
-import { ProjectDto } from '../models/ProjectDto';
+import { baseUrlWbstool } from '../constants';
 import { ElementDto } from '../models/ElementDto';
-
-const baseUrl = 'https://localhost:7108';
+import { ProjectDto } from '../models/ProjectDto';
 
 export class ProjectService {
     async getProject(projectId: string): Promise<ProjectDto> {
         try {
-            const response = await axios.get(`${baseUrl}/projects/${projectId}`, {
+            const response = await axios.get(`${baseUrlWbstool}/projects/${projectId}`, {
                 headers: this.getAuthHeaders(),
             });
             const project = response.data as ProjectDto;
@@ -18,20 +17,9 @@ export class ProjectService {
         }
     }
 
-    async getAllProjects(): Promise<ProjectDto[]> {
-        try {
-            const response = await axios.get(`${baseUrl}/projects`, {
-                headers: this.getAuthHeaders(),
-            });
-            return response.data as ProjectDto[];
-        } catch {
-            throw new Error('Failed to fetch projects.');
-        }
-    }
-
     async updateProject(project: ProjectDto): Promise<void> {
         try {
-            await axios.put(`${baseUrl}/projects/${project.id}`, project, {
+            await axios.put(`${baseUrlWbstool}/projects/${project.id}`, project, {
                 headers: {
                     ...this.getAuthHeaders(),
                     'Content-Type': 'application/json',
@@ -65,10 +53,6 @@ export class ProjectService {
     };
 
     private getAuthHeaders(): { Authorization: string } {
-        const jwt = localStorage.getItem('jwt');
-        if (!jwt) {
-            throw new Error('No JWT found in local storage. User is not authenticated.');
-        }
-        return { Authorization: `Bearer ${jwt}` };
+        return { Authorization: `Bearer ${localStorage.getItem('jwt') }` };
     }
 }

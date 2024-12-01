@@ -1,17 +1,17 @@
 import { Box, List, ListItem, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { Element } from '../models/Element';
+import { ProjectDto } from '../models/ProjectDto';
 import BaseListPage from './BaseListPage';
 
-function Drivers() {
+function Projects() {
     const navigate = useNavigate();
 
     return (
-        <BaseListPage<Element>
-            title="Drivers"
-            route="/api/drivers"
-            itemsName="drivers"
-            renderList={(drivers) => (
+        <BaseListPage<ProjectDto>
+            title="My Projects"
+            apiRoute="/projects"
+            itemsName="projects"
+            renderList={(projects) => (
                 <List>
                     <ListItem sx={{ backgroundColor: "#e0e0e0", mb: 1, borderRadius: 1 }}>
                         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
@@ -27,22 +27,22 @@ function Drivers() {
                         {/*    </Box>*/}
                         </Box>
                     </ListItem>
-                    {drivers?.map((driver) => (
+                    {projects?.map((project) => (
                         <ListItem
-                            key={driver.id}
+                            key={project.id}
                             sx={{ backgroundColor: "#f5f5f5", mb: 1, borderRadius: 1, cursor: 'pointer' }}
-                            onClick={() => navigate(`/drivers/${driver.id}`)}
+                            onClick={() => navigate(`/projects/${project.id}/edit`)}
                         >
                             <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
                                 <Box flex={1}>
                                     <Typography variant="body1" color="text.secondary" fontWeight="bold">
-                                        {driver.name}
+                                        {project.name}
                                     </Typography>
                                 </Box>
                             {/*    <Box flex={1}>*/}
                             {/*        <Button*/}
                             {/*            variant="outlined"*/}
-                            {/*            href={driver.wikipediaUrl}*/}
+                            {/*            href={season.wikipediaUrl}*/}
                             {/*            target="_blank"*/}
                             {/*            rel="noopener noreferrer"*/}
                             {/*            style={{ textTransform: 'lowercase' }}*/}
@@ -59,4 +59,4 @@ function Drivers() {
     );
 }
 
-export default Drivers;
+export default Projects;
