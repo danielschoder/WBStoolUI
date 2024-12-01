@@ -1,13 +1,14 @@
-import { Box, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ElementDto } from "../models/ElementDto";
+import { Element } from "../models/Element";
 
 interface PropertiesComponentProps {
-    selectedItem: ElementDto;
+    selectedItem: Element;
     onLabelChange: (newLabel: string) => void;
+    onAddChild: () => void;
 }
 
-const PropertiesComponent: React.FC<PropertiesComponentProps> = ({ selectedItem, onLabelChange }) => {
+const PropertiesComponent: React.FC<PropertiesComponentProps> = ({ selectedItem, onLabelChange, onAddChild }) => {
     const [label, setLabel] = useState(selectedItem.label);
 
     useEffect(() => {
@@ -29,6 +30,9 @@ const PropertiesComponent: React.FC<PropertiesComponentProps> = ({ selectedItem,
                 fullWidth
                 variant="outlined"
             />
+            <Button sx={{ mb: 2 }} variant="contained" color="primary" onClick={onAddChild}>
+                Add Sub
+            </Button>
         </Box>
     );
 };

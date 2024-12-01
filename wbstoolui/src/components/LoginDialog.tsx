@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { AuthService } from '../hooks/AuthService';
-import { LoginDto } from '../models/LoginDto';
+import { LoginDto } from '../dtos/LoginDto';
 
 interface LoginDialogProps {
     open: boolean;

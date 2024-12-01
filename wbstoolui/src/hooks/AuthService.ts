@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { JwtPayload, jwtDecode } from 'jwt-decode';
 import { baseUrlAuth } from '../constants';
-import { AuthResponseDto } from '../models/AuthResponseDto';
-import { LoginDto } from '../models/LoginDto';
-import { RegisterDto } from '../models/RegisterDto';
+import { AuthResponseDto } from '../dtos/AuthResponseDto';
+import { LoginDto } from '../dtos/LoginDto';
+import { RegisterDto } from '../dtos/RegisterDto';
 
 interface CustomJwtPayload extends JwtPayload {
     sub?: string;

@@ -8,18 +8,18 @@ import Loading from "../components/Loading";
 import PropertiesComponent from "../components/PropertiesComponent";
 import { ProjectApiService } from "../hooks/ProjectApiService";
 import { ProjectService } from "../logic/ProjectService";
-import { ElementDto } from "../models/ElementDto";
-import { ProjectDto } from "../models/ProjectDto";
+import { Element } from "../models/Element";
+import { Project } from "../models/Project";
 import SaveIcon from '@mui/icons-material/Save';
 
 const ProjectEdit = () => {
     const { projectId } = useParams<{ projectId: string }>();
-    const [project, setProject] = useState<ProjectDto | null>(null);
-    const [selectedItem, setSelectedItem] = useState<ElementDto | null>(null);
+    const [project, setProject] = useState<Project | null>(null);
+    const [selectedItem, setSelectedItem] = useState<Element | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const projectApiService = useMemo(() => new ProjectApiService(), []);
     const projectService = useMemo(() => new ProjectService(), []);
+    const projectApiService = useMemo(() => new ProjectApiService(projectService), [projectService]);
     const apiRef = useTreeViewApiRef();
 
     useEffect(() => {
@@ -44,12 +44,6 @@ const ProjectEdit = () => {
         }
     };
 
-    const saveProject = async () => {
-        if (project && apiRef.current) {
-            await projectApiService.updateProject(project);
-        }
-    };
-
     const handleItemSelectionToggle = (_event: React.SyntheticEvent, itemId: string, isSelected: boolean) => {
         if (project && isSelected) {
             setSelectedItem(projectService.findElementById(project.elements, itemId));
@@ -60,10 +54,45 @@ const ProjectEdit = () => {
         if (project && selectedItem) {
             selectedItem.label = newLabel;
             if (apiRef.current) {
-                apiRef.current.updateItemLabel(selectedItem.id, selectedItem.label);
+                apiRef.current.updateItemLabel(selectedItem.id, getItemLabel(selectedItem));
             }
         }
     };
+
+    const handleAddChild = () => {
+        if (!selectedItem) return;
+
+        const newChild: Element = {
+            id: crypto.randomUUID(), // Generate unique ID
+            number: '',
+            label: 'New Child',
+            parent: selectedItem,
+            children: []
+        };
+        if (!selectedItem.children) {
+            selectedItem.children = [];
+        }
+        selectedItem.children.push(newChild);
+
+        //// Optional: Update UI if necessary
+        //if (apiRef.current) {
+        //    apiRef.current.(selectedItem.id, {
+        //        ...selectedItem, // Ensure the parent is updated
+        //    });
+        //}
+
+        setSelectedItem({ ...selectedItem });
+    };
+
+    const saveProject = async () => {
+        if (project) {
+            await projectApiService.updateProject(project);
+        }
+    };
+
+    function getItemLabel(item: Element) {
+        return item.number + " " + item.label;
+    }
 
     if (loading) { return <Loading />; }
     if (error) { return <Error error={error} />; }
@@ -73,6 +102,7 @@ const ProjectEdit = () => {
                 <Box sx={{ flex: 1, mr: 2, overflowY: 'auto', height: '100%' }}>
                     <RichTreeView
                         items={project.elements}
+                        getItemLabel={getItemLabel}
                         apiRef={apiRef}
                         defaultExpandedItems={project.settings.expandedElementIds || []}
                         onExpandedItemsChange={handleExpansionChange}
@@ -90,11 +120,12 @@ const ProjectEdit = () => {
                             Save Project
                         </Button>
                     </Box>
-                    <Box sx={{ mb: 2 }}>
+                    <Box sx={{ mt: 2 }}>
                         {selectedItem ? (
                             <PropertiesComponent
                                 selectedItem={selectedItem}
                                 onLabelChange={handleLabelChange}
+                                onAddChild={handleAddChild}
                             />
                         ) : (
                             <p>Select an item to edit</p>

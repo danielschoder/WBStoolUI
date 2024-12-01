@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { PaginatedResponseDto } from '../models/PaginatedResponseDto';
+import { PaginatedResponseDto } from '../dtos/PaginatedResponseDto';
 
 function getAuthHeaders(): { Authorization: string } {
     return { Authorization: `Bearer ${localStorage.getItem('jwt')}` };

@@ -1,13 +1,13 @@
 import { Box, List, ListItem, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { ProjectDto } from '../models/ProjectDto';
+import { Project } from '../models/Project';
 import BaseListPage from './BaseListPage';
 
 function Projects() {
     const navigate = useNavigate();
 
     return (
-        <BaseListPage<ProjectDto>
+        <BaseListPage<Project>
             title="My Projects"
             apiRoute="/projects"
             itemsName="projects"
