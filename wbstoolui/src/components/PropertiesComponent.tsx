@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ElementDto } from "../models/ElementDto";
 
@@ -15,11 +15,9 @@ const PropertiesComponent: React.FC<PropertiesComponentProps> = ({ selectedItem,
     }, [selectedItem]);
 
     const handleLabelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setLabel(event.target.value);
-    };
-
-    const handleSave = () => {
-        onLabelChange(label);
+        const newLabel = event.target.value;
+        setLabel(newLabel);
+        onLabelChange(newLabel);
     };
 
     return (
@@ -31,11 +29,6 @@ const PropertiesComponent: React.FC<PropertiesComponentProps> = ({ selectedItem,
                 fullWidth
                 variant="outlined"
             />
-            <Box sx={{ mt: 2 }}>
-                <Button variant="contained" color="primary" onClick={handleSave}>
-                    Save Label
-                </Button>
-            </Box>
         </Box>
     );
 };

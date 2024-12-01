@@ -1,13 +1,16 @@
 import { Box, Button, Container } from "@mui/material";
+import { useTreeViewApiRef } from "@mui/x-tree-view/hooks/useTreeViewApiRef";
 import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import Error from '../components/Error';
 import Loading from "../components/Loading";
 import PropertiesComponent from "../components/PropertiesComponent";
-import { ProjectService } from "../hooks/ProjectService";
-import { ProjectDto } from "../models/ProjectDto";
+import { ProjectApiService } from "../hooks/ProjectApiService";
+import { ProjectService } from "../logic/ProjectService";
 import { ElementDto } from "../models/ElementDto";
+import { ProjectDto } from "../models/ProjectDto";
+import SaveIcon from '@mui/icons-material/Save';
 
 const ProjectEdit = () => {
     const { projectId } = useParams<{ projectId: string }>();
@@ -15,14 +18,16 @@ const ProjectEdit = () => {
     const [selectedItem, setSelectedItem] = useState<ElementDto | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const projectApiService = useMemo(() => new ProjectApiService(), []);
     const projectService = useMemo(() => new ProjectService(), []);
+    const apiRef = useTreeViewApiRef();
 
     useEffect(() => {
         if (!projectId) return;
         const fetchProject = async () => {
             try {
                 setLoading(true);
-                setProject(await projectService.getProject(projectId));
+                setProject(await projectApiService.getProject(projectId));
             } catch {
                 setError("Failed to fetch project.");
             } finally {
@@ -31,10 +36,7 @@ const ProjectEdit = () => {
         };
 
         fetchProject();
-    }, [projectService, projectId]);
-
-    if (loading) { return <Loading />; }
-    if (error) { return <Error error={error} />; }
+    }, [projectApiService, projectId]);
 
     const handleExpansionChange = (_event: React.SyntheticEvent, itemIds: string[]) => {
         if (project) {
@@ -43,47 +45,35 @@ const ProjectEdit = () => {
     };
 
     const saveProject = async () => {
-        if (project) await projectService.updateProject(project);
-    };
-
-    const findElementById = (elements: ElementDto[], id: string): ElementDto | null => {
-        for (const element of elements) {
-            if (element.id === id) {
-                return element;
-            }
-            if (element.children) {
-                const foundInChildren = findElementById(element.children, id);
-                if (foundInChildren) {
-                    return foundInChildren;
-                }
-            }
+        if (project && apiRef.current) {
+            await projectApiService.updateProject(project);
         }
-        return null;
     };
 
-    const handleItemSelectionToggle = (
-        _event: React.SyntheticEvent,
-        itemId: string,
-        isSelected: boolean,
-        ) => {
+    const handleItemSelectionToggle = (_event: React.SyntheticEvent, itemId: string, isSelected: boolean) => {
         if (project && isSelected) {
-            setSelectedItem(findElementById(project.elements, itemId));
+            setSelectedItem(projectService.findElementById(project.elements, itemId));
         }
     };
 
     const handleLabelChange = (newLabel: string) => {
         if (project && selectedItem) {
             selectedItem.label = newLabel;
-            setProject(project);
+            if (apiRef.current) {
+                apiRef.current.updateItemLabel(selectedItem.id, selectedItem.label);
+            }
         }
     };
 
-    return project ? (
-        <Container>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, height: '100%' }}>
-                <Box sx={{ flex: 1, mr: 2 }}>
+    if (loading) { return <Loading />; }
+    if (error) { return <Error error={error} />; }
+    if (project) {
+        return <Container>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, height: 'calc(100vh - 64px - 24px)' }}>
+                <Box sx={{ flex: 1, mr: 2, overflowY: 'auto', height: '100%' }}>
                     <RichTreeView
                         items={project.elements}
+                        apiRef={apiRef}
                         defaultExpandedItems={project.settings.expandedElementIds || []}
                         onExpandedItemsChange={handleExpansionChange}
                         expansionTrigger="iconContainer"
@@ -94,9 +84,9 @@ const ProjectEdit = () => {
 
                 <Box sx={{ borderLeft: '2px solid #ccc', height: 'auto', mr: 2 }} />
 
-                <Box sx={{ width: '300px' }}>
+                <Box sx={{ width: '300px', position: 'relative' }}>
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                        <Button variant="contained" color="primary" onClick={saveProject}>
+                        <Button variant="contained" color="primary" onClick={saveProject} startIcon={<SaveIcon />}>
                             Save Project
                         </Button>
                     </Box>
@@ -112,8 +102,8 @@ const ProjectEdit = () => {
                     </Box>
                 </Box>
             </Box>
-        </Container>
-    ) : <Container></Container>;
+        </Container>;
+    }
 };
 
 export default ProjectEdit;

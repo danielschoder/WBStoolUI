@@ -3,7 +3,7 @@ import { baseUrlWbstool } from '../constants';
 import { ElementDto } from '../models/ElementDto';
 import { ProjectDto } from '../models/ProjectDto';
 
-export class ProjectService {
+export class ProjectApiService {
     async getProject(projectId: string): Promise<ProjectDto> {
         try {
             const response = await axios.get(`${baseUrlWbstool}/projects/${projectId}`, {
