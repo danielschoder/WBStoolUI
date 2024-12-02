@@ -3,17 +3,17 @@ import { useEffect, useState } from "react";
 import { Element } from "../models/Element";
 
 interface PropertiesComponentProps {
-    selectedItem: Element;
+    selectedElement: Element;
     onLabelChange: (newLabel: string) => void;
     onAddChild: () => void;
 }
 
-const PropertiesComponent: React.FC<PropertiesComponentProps> = ({ selectedItem, onLabelChange, onAddChild }) => {
-    const [label, setLabel] = useState(selectedItem.label);
+const PropertiesComponent: React.FC<PropertiesComponentProps> = ({ selectedElement, onLabelChange, onAddChild }) => {
+    const [label, setLabel] = useState(selectedElement.label);
 
     useEffect(() => {
-        setLabel(selectedItem.label);
-    }, [selectedItem]);
+        setLabel(selectedElement.label);
+    }, [selectedElement]);
 
     const handleLabelChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newLabel = event.target.value;

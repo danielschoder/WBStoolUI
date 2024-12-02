@@ -1,40 +1,24 @@
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import { AppBar, Box, Button, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthService } from '../hooks/AuthService';
+import { useServices } from '../hooks/useServices';
 import LoginDialog from './LoginDialog';
 import RegisterDialog from './RegisterDialog';
 
 interface AppBarComponentProps {
-    authService: AuthService;
-    isAuthenticated: boolean;
     setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    isLoginDialogOpen: boolean;
-    setOpenLoginDialog: React.Dispatch<React.SetStateAction<boolean>>;
-    handleLoginOpen: () => void;
-    handleLoginSubmit: () => void;
-    isRegisterDialogOpen: boolean;
-    setOpenRegisterDialog: React.Dispatch<React.SetStateAction<boolean>>;
-    handleRegisterOpen: () => void;
-    handleRegisterSubmit: () => void;
 }
 
 const AppBarComponent: React.FC<AppBarComponentProps> = ({
-    authService,
-    isAuthenticated,
-    setDrawerOpen,
-    isLoginDialogOpen,
-    setOpenLoginDialog,
-    handleLoginOpen,
-    handleLoginSubmit,
-    isRegisterDialogOpen,
-    setOpenRegisterDialog,
-    handleRegisterOpen,
-    handleRegisterSubmit
+    setDrawerOpen
 }) => {
     const navigate = useNavigate();
+    const { authApiService } = useServices();
+    const [isAuthenticated, setAuthenticated] = useState(false);
+    const [isLoginDialogOpen, setOpenLoginDialog] = useState(false);
+    const [isRegisterDialogOpen, setOpenRegisterDialog] = useState(false);
 
     return (
         <AppBar position="static">
@@ -56,7 +40,7 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
                             <Button color="inherit" onClick={() => navigate('/projects')}>
                                 My Projects
                             </Button>
-                            <Tooltip title={authService.getUserEmail()} arrow>
+                            <Tooltip title={authApiService.getUserEmail()} arrow>
                                 <IconButton color="inherit">
                                     <PersonIcon />
                                 </IconButton>
@@ -64,10 +48,10 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
                         </>
                     ) : (
                         <>
-                            <Button color="inherit" onClick={handleLoginOpen}>
+                            <Button color="inherit" onClick={() => setOpenLoginDialog(true)}>
                                 Login
                             </Button>
-                            <Button color="inherit" onClick={handleRegisterOpen}>
+                            <Button color="inherit" onClick={() => setOpenRegisterDialog(true)}>
                                 Register
                             </Button>
                         </>
@@ -76,15 +60,21 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
             </Toolbar>
             <LoginDialog
                 open={isLoginDialogOpen}
-                onClose={() => setOpenLoginDialog(false)}
-                onLogin={handleLoginSubmit}
-                authService={authService}
+                onClose={
+                    () => {
+                        setOpenLoginDialog(false);
+                        setAuthenticated(authApiService.isAuthenticated());
+                    }
+                }
             />
             <RegisterDialog
                 open={isRegisterDialogOpen}
-                onClose={() => setOpenRegisterDialog(false)}
-                onRegister={handleRegisterSubmit}
-                authService={authService}
+                onClose={
+                    () => {
+                        setOpenRegisterDialog(false);
+                        setAuthenticated(authApiService.isAuthenticated());
+                    }
+                }
             />
         </AppBar>
     );

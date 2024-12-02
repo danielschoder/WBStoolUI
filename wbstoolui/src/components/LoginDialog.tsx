@@ -1,18 +1,17 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { AuthService } from '../hooks/AuthService';
 import { LoginDto } from '../dtos/LoginDto';
+import { useServices } from '../hooks/useServices';
 
 interface LoginDialogProps {
     open: boolean;
     onClose: () => void;
-    onLogin: () => void;
-    authService: AuthService;
 }
 
-const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, authService }) => {
+const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose }) => {
     const [loginForm, setLoginForm] = useState<LoginDto>(new LoginDto());
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const { authApiService } = useServices();
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -23,11 +22,10 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin, authS
     };
 
     const handleLoginSubmit = async () => {
-        const authResponse = await authService.login(loginForm);
+        const authResponse = await authApiService.login(loginForm);
         if (authResponse.errorMessage) {
             setErrorMessage(authResponse.errorMessage);
         } else {
-            onLogin();
             setLoginForm(new LoginDto());
             setErrorMessage(''); 
             onClose();

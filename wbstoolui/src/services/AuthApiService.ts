@@ -10,8 +10,7 @@ interface CustomJwtPayload extends JwtPayload {
     email?: string;
 }
 
-export class AuthService {
-
+export class AuthApiService {
     async logVisitor(): Promise<void> {
         (async () => {
             try {
@@ -68,13 +67,13 @@ export class AuthService {
         }
     }
 
+    logout() {
+        localStorage.removeItem('jwt');
+    }
+
     isAuthenticated(): boolean {
         const jwt = localStorage.getItem('jwt');
         return !!jwt;
-    }
-
-    logout() {
-        localStorage.removeItem('jwt');
     }
 
     getUserId(): string | null {
@@ -88,7 +87,7 @@ export class AuthService {
     }
 
     getDecodedJwt(): CustomJwtPayload | null {
-        const jwt = localStorage.getItem('jwt');
+        const jwt = this.getLocalJwt();
         if (!jwt) {
             return null;
         }
@@ -99,5 +98,13 @@ export class AuthService {
             console.error('Failed to decode JWT:', error);
             return null;
         }
+    }
+
+    getAuthHeaders(): { Authorization: string } {
+        return { Authorization: `Bearer ${this.getLocalJwt()}` };
+    }
+
+    getLocalJwt(): string | null {
+        return localStorage.getItem('jwt');
     }
 }

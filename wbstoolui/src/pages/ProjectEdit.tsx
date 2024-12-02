@@ -1,26 +1,24 @@
+import SaveIcon from '@mui/icons-material/Save';
 import { Box, Button, Container } from "@mui/material";
 import { useTreeViewApiRef } from "@mui/x-tree-view/hooks/useTreeViewApiRef";
 import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Error from '../components/Error';
 import Loading from "../components/Loading";
 import PropertiesComponent from "../components/PropertiesComponent";
-import { ProjectApiService } from "../hooks/ProjectApiService";
-import { ProjectService } from "../logic/ProjectService";
 import { Element } from "../models/Element";
 import { Project } from "../models/Project";
-import SaveIcon from '@mui/icons-material/Save';
+import { useServices } from '../hooks/useServices';
 
 const ProjectEdit = () => {
     const { projectId } = useParams<{ projectId: string }>();
     const [project, setProject] = useState<Project | null>(null);
-    const [selectedItem, setSelectedItem] = useState<Element | null>(null);
+    const [selectedElement, setSelectedElement] = useState<Element | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const projectService = useMemo(() => new ProjectService(), []);
-    const projectApiService = useMemo(() => new ProjectApiService(projectService), [projectService]);
     const apiRef = useTreeViewApiRef();
+    const { projectService, projectApiService } = useServices();
 
     useEffect(() => {
         if (!projectId) return;
@@ -46,42 +44,35 @@ const ProjectEdit = () => {
 
     const handleItemSelectionToggle = (_event: React.SyntheticEvent, itemId: string, isSelected: boolean) => {
         if (project && isSelected) {
-            setSelectedItem(projectService.findElementById(project.elements, itemId));
+            setSelectedElement(projectService.findElementById(project.elements, itemId));
         }
     };
 
     const handleLabelChange = (newLabel: string) => {
-        if (project && selectedItem) {
-            selectedItem.label = newLabel;
+        if (project && selectedElement) {
+            selectedElement.label = newLabel;
             if (apiRef.current) {
-                apiRef.current.updateItemLabel(selectedItem.id, getItemLabel(selectedItem));
+                apiRef.current.updateItemLabel(selectedElement.id, getItemLabel(selectedElement));
             }
         }
     };
 
     const handleAddChild = () => {
-        if (!selectedItem) return;
+        if (!selectedElement) return;
 
         const newChild: Element = {
             id: crypto.randomUUID(), // Generate unique ID
             number: '',
             label: 'New Child',
-            parent: selectedItem,
+            parent: selectedElement,
             children: []
         };
-        if (!selectedItem.children) {
-            selectedItem.children = [];
+        if (!selectedElement.children) {
+            selectedElement.children = [];
         }
-        selectedItem.children.push(newChild);
+        selectedElement.children.push(newChild);
 
-        //// Optional: Update UI if necessary
-        //if (apiRef.current) {
-        //    apiRef.current.(selectedItem.id, {
-        //        ...selectedItem, // Ensure the parent is updated
-        //    });
-        //}
-
-        setSelectedItem({ ...selectedItem });
+        setSelectedElement({ ...selectedElement });
     };
 
     const saveProject = async () => {
@@ -121,9 +112,9 @@ const ProjectEdit = () => {
                         </Button>
                     </Box>
                     <Box sx={{ mt: 2 }}>
-                        {selectedItem ? (
+                        {selectedElement ? (
                             <PropertiesComponent
-                                selectedItem={selectedItem}
+                                selectedElement={selectedElement}
                                 onLabelChange={handleLabelChange}
                                 onAddChild={handleAddChild}
                             />
