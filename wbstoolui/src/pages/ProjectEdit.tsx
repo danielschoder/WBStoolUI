@@ -84,7 +84,7 @@ const ProjectEdit = () => {
                     <List>
                         <ListItem sx={{ backgroundColor: "#e0e0e0", mb: 1, borderRadius: 1 }}>
                             <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
-                                <Box flex={1}>
+                                <Box flex={1} sx={{ pr: 30 }}>
                                     <Typography variant="h6" color="text.primary" fontWeight="bold">
                                         Project
                                     </Typography>
@@ -109,8 +109,15 @@ const ProjectEdit = () => {
                                 onClick={() => handleElementSelected(element)}
                             >
                                 <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
-                                    <Box flex={1} sx={{ pl: element.level * 3 }}>
-                                        <Typography variant="body1" color="text.secondary" fontWeight="bold">
+                                    <Box flex={1} sx={{ pl: element.level * 3, pr: 30 - element.level * 3 }}>
+                                        <Typography
+                                            variant="body1"
+                                            color="text.secondary"
+                                            fontWeight="bold"
+                                            sx={{
+                                                fontWeight: element.level < 2 ? 'bold' : 'normal',
+                                            }}
+                                        >
                                             {projectService.getItemLabel(element)}
                                         </Typography>
                                     </Box>
