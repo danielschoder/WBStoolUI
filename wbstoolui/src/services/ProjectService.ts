@@ -7,25 +7,35 @@ export class ProjectService {
         this.populateElements(project);
     }
 
-    getItemLabel(item: Element) {
-        return `${item.number} ${item.label}`;
+    getItemLabel(element: Element) {
+        return `${element.number} ${element.label}`;
     }
 
     populateElements(project: Project) {
         project.elements = [];
-        this.populateTreeAndList(project, project.rootElement);
+        this.populateTreeAndList(project, project.rootElement, false);
     }
 
-    private populateTreeAndList(project: Project, element: Element): void {
+    AddSubElement(element: Element) {
+        if (!element.elements) {
+            element.elements = [];
+        }
+        element.isCollapsed = false;
+        element.elements.push(new Element());
+    }
+
+    private populateTreeAndList(project: Project, element: Element, parentIsCollapsed: boolean): void {
         let i = 0;
-        project.elements.push(element);
+        if (!parentIsCollapsed) {
+            project.elements.push(element);
+        }
         if (element.elements && element.elements.length > 0) {
             for (const child of element.elements) {
                 child.parent = element;
                 child.number = `${element.number}.${i + 1}`;
                 child.level = element.level + 1;
                 child.index = i;
-                this.populateTreeAndList(project, child);
+                this.populateTreeAndList(project, child, parentIsCollapsed || element.isCollapsed);
                 i++;
             }
         }

@@ -6,25 +6,19 @@ export class Element {
     label: string;
     level: number;
     index: number;
+    isCollapsed: boolean;
     parent?: Element;
     elements: Element[];
 
     constructor(
-        id: string,
-        number: string,
-        label: string,
-        level: number,
-        index: number,
-        parent: Element,
-        children: Element[]
     ) {
-        this.id = id;
-        this.number = number;
-        this.label = label;
-        this.level = level;
-        this.index = index;
-        this.parent = parent;
-        this.elements = children;
+        this.id = crypto.randomUUID();
+        this.number = "";
+        this.label = "New";
+        this.level = 0;
+        this.index = 0;
+        this.isCollapsed = false;
+        this.elements = [];
     }
 
     static ToDto(element: Element): ElementDto {

@@ -1,5 +1,7 @@
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SaveIcon from '@mui/icons-material/Save';
-import { Box, Button, Container, List, ListItem, Typography } from "@mui/material";
+import { Box, Button, Container, IconButton, List, ListItem, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Error from '../components/Error';
@@ -33,41 +35,38 @@ const ProjectEdit = () => {
         fetchProject();
     }, [projectApiService, projectId]);
 
-    const handleElementSelected = (selectedElement: Element) => {
-        setSelectedElement(selectedElement);
+    const handleElementSelected = (element: Element) => {
+        setSelectedElement(element);
+    };
+
+    const toggleElementExpansion = (element: Element) => {
+        if (project && element) {
+            element.isCollapsed = !element.isCollapsed;
+            if (element != selectedElement) {
+                setSelectedElement(element);
+            }
+            reRender(project);
+        }
     };
 
     const handleLabelChange = (newLabel: string) => {
         if (project && selectedElement) {
             selectedElement.label = newLabel;
-            projectService.populateElements(project);
-            setProject({ ...project });
+            reRender(project);
         }
     };
 
     const handleAddChild = () => {
-        if (!selectedElement) return;
-
-    //const handleExpansionChange = (_event: React.SyntheticEvent, itemIds: string[]) => {
-    //    if (project) {
-    //        project.settings.expandedElementIds = itemIds;
-    //    }
-    //};
-
-    //    const newChild: Element = {
-    //        id: crypto.randomUUID(), // Generate unique ID
-    //        number: '',
-    //        label: 'New Child',
-    //        parent: selectedElement,
-    //        elements: []
-    //    };
-    //    if (!selectedElement.elements) {
-    //        selectedElement.elements = [];
-    //    }
-    //    selectedElement.elements.push(newChild);
-
-    //    setSelectedElement({ ...selectedElement });
+        if (project && selectedElement) {
+            projectService.AddSubElement(selectedElement);
+            reRender(project);
+        }
     };
+
+    const reRender = (project: Project) => {
+        projectService.populateElements(project);
+        setProject({ ...project });
+    }
 
     const saveProject = async () => {
         if (project) {
@@ -84,16 +83,18 @@ const ProjectEdit = () => {
                     <List>
                         <ListItem sx={{ backgroundColor: "#e0e0e0", mb: 1, borderRadius: 1 }}>
                             <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
-                                <Box flex={1} sx={{ pr: 30 }}>
+                                <Box flex={1} sx={{ pl: 5, pr: 30 }}>
                                     <Typography variant="h6" color="text.primary" fontWeight="bold">
                                         Project
                                     </Typography>
                                 </Box>
+
                                 <Box flex={1}>
                                     <Typography variant="h6" color="text.primary" fontWeight="bold">
                                         Level
                                     </Typography>
                                 </Box>
+
                                 <Box flex={1}>
                                     <Typography variant="h6" color="text.primary" fontWeight="bold">
                                         Index
@@ -105,27 +106,48 @@ const ProjectEdit = () => {
                         {project.elements?.map((element) => (
                             <ListItem
                                 key={element.id}
-                                sx={{ backgroundColor: "#f5f5f5", mb: 1, borderRadius: 1, cursor: 'pointer' }}
+                                sx={{
+                                    backgroundColor: selectedElement?.id === element.id ? "#ecf1f1" : "#f5f5f5",
+                                    mb: 1,
+                                    borderRadius: 1,
+                                    cursor: 'pointer'
+                                }}
                                 onClick={() => handleElementSelected(element)}
                             >
                                 <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
-                                    <Box flex={1} sx={{ pl: element.level * 3, pr: 30 - element.level * 3 }}>
+                                    {element.elements && element.elements.length > 0 && (
+                                        <Box flex={0} sx={{ pl: element.level * 3 }}>
+                                            <IconButton onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleElementExpansion(element);
+                                            }}>
+                                                {element.isCollapsed ? <ChevronRight /> : <ExpandMoreIcon />}
+                                            </IconButton>
+                                        </Box>
+                                    )}
+
+                                    <Box flex={1} sx={{
+                                        pl: element.elements && element.elements.length > 0 ? 0 : 5 + element.level * 3,
+                                        pr: 30 - element.level * 3
+                                    }}>
                                         <Typography
                                             variant="body1"
                                             color="text.secondary"
                                             fontWeight="bold"
                                             sx={{
-                                                fontWeight: element.level < 2 ? 'bold' : 'normal',
+                                                fontWeight: element.elements && element.elements.length > 0 ? 'bold' : 'normal',
                                             }}
                                         >
                                             {projectService.getItemLabel(element)}
                                         </Typography>
                                     </Box>
+
                                     <Box flex={1}>
                                         <Typography variant="body1" color="primary">
                                             {element.level}
                                         </Typography>
                                     </Box>
+
                                     <Box flex={1}>
                                         <Typography variant="body1" color="primary">
                                             {element.index}
