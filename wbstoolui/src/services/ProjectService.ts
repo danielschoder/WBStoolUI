@@ -4,58 +4,35 @@ import { Project } from '../models/Project';
 export class ProjectService {
     initializeProject(project: Project): void {
         this.initializeProjectSettings(project);
-        this.setParentForElementsRecursive(project.elements);
+        this.populateElements(project);
     }
 
-    findElementById = (elements: Element[], id: string): Element | null => {
-        for (const element of elements) {
-            if (element.id === id) {
-                return element;
-            }
-            if (element.children) {
-                const foundInChildren = this.findElementById(element.children, id);
-                if (foundInChildren) {
-                    return foundInChildren;
-                }
-            }
-        }
-        return null;
-    };
+    getItemLabel(item: Element) {
+        return `${item.number} ${item.label}`;
+    }
 
-    private setParentForElementsRecursive(elements: Element[], parent?: Element): void {
-        let i = 1;
-        for (const element of elements) {
-            element.parent = parent;
-            if (parent) {
-                element.number = parent?.number + "." + i;
-            }
-            i++;
-            if (element.children && element.children.length > 0) {
-                this.setParentForElementsRecursive(element.children, element);
+    populateElements(project: Project) {
+        project.elements = [];
+        this.populateTreeAndList(project, project.rootElement);
+    }
+
+    private populateTreeAndList(project: Project, element: Element): void {
+        let i = 0;
+        project.elements.push(element);
+        if (element.elements && element.elements.length > 0) {
+            for (const child of element.elements) {
+                child.parent = element;
+                child.number = `${element.number}.${i + 1}`;
+                child.level = element.level + 1;
+                child.index = i;
+                this.populateTreeAndList(project, child);
+                i++;
             }
         }
     }
 
     private initializeProjectSettings(project: Project): void {
-        if (!project.settings) {
-            project.settings = {
-                expandedElementIds: [],
-            };
-        }
-        if (!project.settings.expandedElementIds) {
-            project.settings.expandedElementIds = this.getExpandedItemIds(project.elements);
-        }
-        project.elements[0].number = "1";
+        project.rootElement.number = "1";
+        project.rootElement.level = 0;
     }
-
-    private getExpandedItemIds = (items: Element[]): string[] => {
-        let ids: string[] = [];
-        items.forEach((item) => {
-            if (item.children && item.children.length > 0) {
-                ids.push(item.id);
-                ids = ids.concat(this.getExpandedItemIds(item.children));
-            }
-        });
-        return ids;
-    };
 }

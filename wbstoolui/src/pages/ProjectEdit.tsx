@@ -1,15 +1,13 @@
 import SaveIcon from '@mui/icons-material/Save';
-import { Box, Button, Container } from "@mui/material";
-import { useTreeViewApiRef } from "@mui/x-tree-view/hooks/useTreeViewApiRef";
-import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
+import { Box, Button, Container, List, ListItem, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Error from '../components/Error';
 import Loading from "../components/Loading";
 import PropertiesComponent from "../components/PropertiesComponent";
+import { useServices } from '../hooks/useServices';
 import { Element } from "../models/Element";
 import { Project } from "../models/Project";
-import { useServices } from '../hooks/useServices';
 
 const ProjectEdit = () => {
     const { projectId } = useParams<{ projectId: string }>();
@@ -17,7 +15,6 @@ const ProjectEdit = () => {
     const [selectedElement, setSelectedElement] = useState<Element | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const apiRef = useTreeViewApiRef();
     const { projectService, projectApiService } = useServices();
 
     useEffect(() => {
@@ -36,43 +33,40 @@ const ProjectEdit = () => {
         fetchProject();
     }, [projectApiService, projectId]);
 
-    const handleExpansionChange = (_event: React.SyntheticEvent, itemIds: string[]) => {
-        if (project) {
-            project.settings.expandedElementIds = itemIds;
-        }
-    };
-
-    const handleItemSelectionToggle = (_event: React.SyntheticEvent, itemId: string, isSelected: boolean) => {
-        if (project && isSelected) {
-            setSelectedElement(projectService.findElementById(project.elements, itemId));
-        }
+    const handleElementSelected = (selectedElement: Element) => {
+        setSelectedElement(selectedElement);
     };
 
     const handleLabelChange = (newLabel: string) => {
         if (project && selectedElement) {
             selectedElement.label = newLabel;
-            if (apiRef.current) {
-                apiRef.current.updateItemLabel(selectedElement.id, getItemLabel(selectedElement));
-            }
+            projectService.populateElements(project);
+            setProject({ ...project });
         }
     };
 
     const handleAddChild = () => {
         if (!selectedElement) return;
 
-        const newChild: Element = {
-            id: crypto.randomUUID(), // Generate unique ID
-            number: '',
-            label: 'New Child',
-            parent: selectedElement,
-            children: []
-        };
-        if (!selectedElement.children) {
-            selectedElement.children = [];
-        }
-        selectedElement.children.push(newChild);
+    //const handleExpansionChange = (_event: React.SyntheticEvent, itemIds: string[]) => {
+    //    if (project) {
+    //        project.settings.expandedElementIds = itemIds;
+    //    }
+    //};
 
-        setSelectedElement({ ...selectedElement });
+    //    const newChild: Element = {
+    //        id: crypto.randomUUID(), // Generate unique ID
+    //        number: '',
+    //        label: 'New Child',
+    //        parent: selectedElement,
+    //        elements: []
+    //    };
+    //    if (!selectedElement.elements) {
+    //        selectedElement.elements = [];
+    //    }
+    //    selectedElement.elements.push(newChild);
+
+    //    setSelectedElement({ ...selectedElement });
     };
 
     const saveProject = async () => {
@@ -81,26 +75,59 @@ const ProjectEdit = () => {
         }
     };
 
-    function getItemLabel(item: Element) {
-        return item.number + " " + item.label;
-    }
-
     if (loading) { return <Loading />; }
     if (error) { return <Error error={error} />; }
     if (project) {
-        return <Container>
+        return <Container maxWidth={false}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, height: 'calc(100vh - 64px - 24px)' }}>
                 <Box sx={{ flex: 1, mr: 2, overflowY: 'auto', height: '100%' }}>
-                    <RichTreeView
-                        items={project.elements}
-                        getItemLabel={getItemLabel}
-                        apiRef={apiRef}
-                        defaultExpandedItems={project.settings.expandedElementIds || []}
-                        onExpandedItemsChange={handleExpansionChange}
-                        expansionTrigger="iconContainer"
-                        onItemSelectionToggle={handleItemSelectionToggle}
-                        itemChildrenIndentation={24}
-                    />
+                    <List>
+                        <ListItem sx={{ backgroundColor: "#e0e0e0", mb: 1, borderRadius: 1 }}>
+                            <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
+                                <Box flex={1}>
+                                    <Typography variant="h6" color="text.primary" fontWeight="bold">
+                                        Project
+                                    </Typography>
+                                </Box>
+                                <Box flex={1}>
+                                    <Typography variant="h6" color="text.primary" fontWeight="bold">
+                                        Level
+                                    </Typography>
+                                </Box>
+                                <Box flex={1}>
+                                    <Typography variant="h6" color="text.primary" fontWeight="bold">
+                                        Index
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </ListItem>
+
+                        {project.elements?.map((element) => (
+                            <ListItem
+                                key={element.id}
+                                sx={{ backgroundColor: "#f5f5f5", mb: 1, borderRadius: 1, cursor: 'pointer' }}
+                                onClick={() => handleElementSelected(element)}
+                            >
+                                <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
+                                    <Box flex={1} sx={{ pl: element.level * 3 }}>
+                                        <Typography variant="body1" color="text.secondary" fontWeight="bold">
+                                            {projectService.getItemLabel(element)}
+                                        </Typography>
+                                    </Box>
+                                    <Box flex={1}>
+                                        <Typography variant="body1" color="primary">
+                                            {element.level}
+                                        </Typography>
+                                    </Box>
+                                    <Box flex={1}>
+                                        <Typography variant="body1" color="primary">
+                                            {element.index}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </ListItem>
+                        ))}
+                    </List>
                 </Box>
 
                 <Box sx={{ borderLeft: '2px solid #ccc', height: 'auto', mr: 2 }} />

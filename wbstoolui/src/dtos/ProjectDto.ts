@@ -4,6 +4,6 @@ import { ElementDto } from "./ElementDto";
 export interface ProjectDto {
     id: string;
     name: string;
-    elements: ElementDto[];
+    rootElement: ElementDto;
     settings: ProjectSettingsDto;
 }

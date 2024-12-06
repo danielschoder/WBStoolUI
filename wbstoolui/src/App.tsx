@@ -1,19 +1,20 @@
-import { useEffect, useMemo, useState } from 'react';
+//import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AppBarComponent from './components/AppBarComponent';
 import DrawerComponent from './components/DrawerComponent';
+//import { useServices } from './hooks/useServices';
 import ProjectEdit from './pages/ProjectEdit';
 import Projects from './pages/Projects';
-import { AuthApiService } from './services/AuthApiService';
 import { ServiceProvider } from './services/ServiceProvider';
 
 const App: React.FC = () => {
-    const authService = useMemo(() => new AuthApiService(), []);
+    //const { authApiService } = useServices();
     const [drawerOpen, setDrawerOpen] = useState(false);
 
-    useEffect(() => {
-        authService.logVisitor();
-    }, [authService]);
+    //useEffect(() => {
+    //    authApiService.logVisitor();
+    //}, [authApiService]);
 
     return (
         <ServiceProvider>

@@ -18,8 +18,8 @@ export class ProjectApiService {
             const project = response.data as Project;
             this.projectService.initializeProject(project);
             return project;
-        } catch {
-            throw new Error('Failed to fetch project.');
+        } catch (error) {
+            throw new Error('Failed to fetch project: ' + error);
         }
     }
 

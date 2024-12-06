@@ -7,6 +7,7 @@ export class Project {
     id: string;
     name: string;
     persons: PersonDto[];
+    rootElement: Element;
     elements: Element[];
     settings: ProjectSettingsDto;
 
@@ -14,21 +15,25 @@ export class Project {
         id: string,
         name: string,
         persons: PersonDto[],
+        rootElement: Element,
         elements: Element[],
         settings: ProjectSettingsDto
     ) {
         this.id = id;
         this.name = name;
         this.persons = persons;
+        this.rootElement = rootElement;
         this.elements = elements;
         this.settings = settings;
     }
 
     static ToDto(project: Project): ProjectDto {
+        const rootElement = Element.ToDto(project.rootElement);
+        rootElement.elements = project.rootElement.elements.map(element => Element.ToDto(element));
         return {
             id: project.id,
             name: project.name,
-            elements: project.elements.map(element => Element.ToDto(element)),
+            rootElement: rootElement,
             settings: project.settings
         };
     }

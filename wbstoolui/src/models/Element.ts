@@ -4,21 +4,27 @@ export class Element {
     id: string;
     number: string;
     label: string;
+    level: number;
+    index: number;
     parent?: Element;
-    children: Element[];
+    elements: Element[];
 
     constructor(
         id: string,
         number: string,
         label: string,
+        level: number,
+        index: number,
         parent: Element,
         children: Element[]
     ) {
         this.id = id;
         this.number = number;
         this.label = label;
+        this.level = level;
+        this.index = index;
         this.parent = parent;
-        this.children = children;
+        this.elements = children;
     }
 
     static ToDto(element: Element): ElementDto {
@@ -27,8 +33,8 @@ export class Element {
             label: element.label
         };
 
-        if (element.children && element.children.length > 0) {
-            dto.children = element.children.map(child => Element.ToDto(child));
+        if (element.elements && element.elements.length > 0) {
+            dto.elements = element.elements.map(element => Element.ToDto(element));
         }
 
         return dto;
