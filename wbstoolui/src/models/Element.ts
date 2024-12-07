@@ -7,6 +7,7 @@ export class Element {
     level: number;
     index: number;
     isCollapsed: boolean; // server
+    status: number; // server
     parent?: Element;
     elements: Element[]; // server
 
@@ -18,14 +19,16 @@ export class Element {
         this.level = 0;
         this.index = 0;
         this.isCollapsed = false;
+        this.status = 0;
         this.elements = [];
     }
 
     static ToDto(element: Element): ElementDto {
         const dto: ElementDto = {
             id: element.id,
+            label: element.label,
             isCollapsed: element.isCollapsed,
-            label: element.label
+            status: element.status
         };
 
         if (element.elements && element.elements.length > 0) {

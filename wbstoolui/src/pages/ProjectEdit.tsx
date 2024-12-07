@@ -21,6 +21,7 @@ const ProjectEdit = () => {
 
     useEffect(() => {
         if (!projectId) return;
+
         const fetchProject = async () => {
             try {
                 setLoading(true);
@@ -45,41 +46,15 @@ const ProjectEdit = () => {
             if (element != selectedElement) {
                 setSelectedElement(element);
             }
-            reRender(project);
+            projectReRender();
         }
     };
 
-    const handleLabelChange = (newLabel: string) => {
-        if (project && selectedElement) {
-            selectedElement.label = newLabel;
-            reRender(project);
+    const projectReRender = () => {
+        if (project) {
+            projectService.populateElements(project);
+            setProject({ ...project });
         }
-    };
-
-    const handleAddChild = () => {
-        if (project && selectedElement) {
-            projectService.AddSubElement(selectedElement);
-            reRender(project);
-        }
-    };
-
-    const handleAddSibling = () => {
-        if (project && selectedElement) {
-            projectService.AddNextElement(selectedElement);
-            reRender(project);
-        }
-    };
-
-    const handleDelete = () => {
-        if (project && selectedElement) {
-            projectService.DeleteElement(selectedElement);
-            reRender(project);
-        }
-    };
-
-    const reRender = (project: Project) => {
-        projectService.populateElements(project);
-        setProject({ ...project });
     }
 
     const saveProject = async () => {
@@ -105,13 +80,13 @@ const ProjectEdit = () => {
 
                                 <Box flex={1}>
                                     <Typography variant="h6" color="text.primary" fontWeight="bold">
-                                        Level
+                                        Status
                                     </Typography>
                                 </Box>
 
                                 <Box flex={1}>
                                     <Typography variant="h6" color="text.primary" fontWeight="bold">
-                                        Index
+                                        Level/Index
                                     </Typography>
                                 </Box>
                             </Box>
@@ -158,13 +133,17 @@ const ProjectEdit = () => {
 
                                     <Box flex={1}>
                                         <Typography variant="body1" color="primary">
-                                            {element.level}
+                                            {element.status === 2
+                                                ? "Finished"
+                                                : element.status === 1
+                                                    ? "Started"
+                                                    : "Planned"}
                                         </Typography>
                                     </Box>
 
                                     <Box flex={1}>
                                         <Typography variant="body1" color="primary">
-                                            {element.index}
+                                            {element.level}/{element.index}
                                         </Typography>
                                     </Box>
                                 </Box>
@@ -184,11 +163,9 @@ const ProjectEdit = () => {
                     <Box sx={{ mt: 2 }}>
                         {selectedElement ? (
                             <PropertiesComponent
+                                project={project}
                                 selectedElement={selectedElement}
-                                onLabelChange={handleLabelChange}
-                                onAddChild={handleAddChild}
-                                onAddSibling={handleAddSibling}
-                                onDelete={handleDelete}
+                                onProjectReRender={projectReRender}
                             />
                         ) : (
                             <p>Select an item to edit</p>

@@ -40,11 +40,13 @@ export class ProjectService {
     }
 
     private populateTreeAndList(project: Project, element: Element, parentIsCollapsed: boolean): void {
-        let i = 0;
         if (!parentIsCollapsed) {
             project.elements.push(element);
         }
         if (element.elements && element.elements.length > 0) {
+            let i = 0;
+            element.status = 0;
+            let numberOfFinished = 0;
             for (const child of element.elements) {
                 child.parent = element;
                 child.number = `${element.number}.${i + 1}`;
@@ -52,6 +54,15 @@ export class ProjectService {
                 child.index = i;
                 this.populateTreeAndList(project, child, parentIsCollapsed || element.isCollapsed);
                 i++;
+                if (child.status > 0) {
+                    element.status = 1;
+                }
+                if (child.status == 2) {
+                    numberOfFinished++;
+                }
+            }
+            if (numberOfFinished == element.elements.length) {
+                element.status = 2;
             }
         }
     }
