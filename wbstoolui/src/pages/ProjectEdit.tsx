@@ -63,6 +63,13 @@ const ProjectEdit = () => {
         }
     };
 
+    const handleAddSibling = () => {
+        if (project && selectedElement) {
+            projectService.AddNextElement(selectedElement);
+            reRender(project);
+        }
+    };
+
     const reRender = (project: Project) => {
         projectService.populateElements(project);
         setProject({ ...project });
@@ -161,9 +168,9 @@ const ProjectEdit = () => {
 
                 <Box sx={{ borderLeft: '2px solid #ccc', height: 'auto', mr: 2 }} />
 
-                <Box sx={{ width: '300px', position: 'relative' }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-                        <Button variant="contained" color="primary" onClick={saveProject} startIcon={<SaveIcon />}>
+                <Box sx={{ width: '400px', position: 'relative' }}>
+                    <Box sx={{ mb: 2 }}>
+                        <Button variant="contained" color="primary" onClick={saveProject} startIcon={<SaveIcon />} fullWidth>
                             Save Project
                         </Button>
                     </Box>
@@ -173,6 +180,7 @@ const ProjectEdit = () => {
                                 selectedElement={selectedElement}
                                 onLabelChange={handleLabelChange}
                                 onAddChild={handleAddChild}
+                                onAddSibling={handleAddSibling}
                             />
                         ) : (
                             <p>Select an item to edit</p>

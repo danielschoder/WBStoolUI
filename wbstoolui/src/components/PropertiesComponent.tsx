@@ -6,9 +6,13 @@ interface PropertiesComponentProps {
     selectedElement: Element;
     onLabelChange: (newLabel: string) => void;
     onAddChild: () => void;
+    onAddSibling: () => void;
+    onDelete: () => void;
 }
 
-const PropertiesComponent: React.FC<PropertiesComponentProps> = ({ selectedElement, onLabelChange, onAddChild }) => {
+const PropertiesComponent: React.FC<PropertiesComponentProps> = ({
+    selectedElement, onLabelChange, onAddChild, onAddSibling, onDelete
+}) => {
     const [label, setLabel] = useState(selectedElement.label);
 
     useEffect(() => {
@@ -30,9 +34,17 @@ const PropertiesComponent: React.FC<PropertiesComponentProps> = ({ selectedEleme
                 fullWidth
                 variant="outlined"
             />
-            <Button sx={{ mb: 2 }} variant="contained" color="primary" onClick={onAddChild}>
-                Add Sub
-            </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
+                <Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={onAddChild}>
+                    Add Sub
+                </Button>
+                <Button variant="contained" color="primary" sx={{ flex: 1 }} disabled={!selectedElement?.parent} onClick={onAddSibling}>
+                    Add Next
+                </Button>
+                <Button variant="contained" color="primary" sx={{ flex: 1 }} disabled={!selectedElement?.parent} onClick={onDelete}>
+                    Delete
+                </Button>
+            </Box>
         </Box>
     );
 };

@@ -24,6 +24,14 @@ export class ProjectService {
         element.elements.push(new Element());
     }
 
+    AddNextElement(element: Element) {
+        const parent = element.parent;
+        if (parent) {
+            parent.isCollapsed = false;
+            parent.elements.splice(element.index + 1, 0, new Element())
+        }
+    }
+
     private populateTreeAndList(project: Project, element: Element, parentIsCollapsed: boolean): void {
         let i = 0;
         if (!parentIsCollapsed) {
