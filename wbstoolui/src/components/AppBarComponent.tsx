@@ -16,7 +16,7 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
 }) => {
     const navigate = useNavigate();
     const { authApiService } = useServices();
-    const [isAuthenticated, setAuthenticated] = useState(false);
+    const [isAuthenticated, setAuthenticated] = useState(authApiService.isAuthenticated());
     const [isLoginDialogOpen, setOpenLoginDialog] = useState(false);
     const [isRegisterDialogOpen, setOpenRegisterDialog] = useState(false);
 
