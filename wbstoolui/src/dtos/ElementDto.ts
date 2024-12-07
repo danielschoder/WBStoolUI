@@ -3,5 +3,7 @@ export interface ElementDto {
     label: string; // server
     isCollapsed: boolean; // server
     status: number; // server
+    effortPlanned: number; // server
+    extCostPlanned: number; // server
     elements?: ElementDto[]; // server
 }

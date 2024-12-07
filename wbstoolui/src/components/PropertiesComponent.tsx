@@ -21,6 +21,20 @@ const PropertiesComponent: React.FC<PropertiesComponentProps> = ({
         }
     };
 
+    const handleEffortChange = (newEffort: string) => {
+        if (project && selectedElement) {
+            selectedElement.effortPlanned = Number(newEffort);
+            onProjectReRender();
+        }
+    };
+
+    const handleExtCostChange = (newExtCost: string) => {
+        if (project && selectedElement) {
+            selectedElement.extCostPlanned = Number(newExtCost);
+            onProjectReRender();
+        }
+    };
+
     const handleAddChild = () => {
         if (project && selectedElement) {
             projectService.AddSubElement(selectedElement);
@@ -73,6 +87,28 @@ const PropertiesComponent: React.FC<PropertiesComponentProps> = ({
                     <MenuItem value={2}>Finished</MenuItem>
                 </Select>
             </FormControl>
+
+            <TextField
+                sx={{ mt: 2 }}
+                label="Internal Effort"
+                type="number"
+                value={selectedElement.effortPlanned}
+                disabled={selectedElement?.elements?.length > 0}
+                onChange={(e) => handleEffortChange(e.target.value)}
+                fullWidth
+                variant="outlined"
+            />
+
+            <TextField
+                sx={{ mt: 2 }}
+                label="External Cost"
+                type="number"
+                value={selectedElement.extCostPlanned}
+                disabled={selectedElement?.elements?.length > 0}
+                onChange={(e) => handleExtCostChange(e.target.value)}
+                fullWidth
+                variant="outlined"
+            />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
                 <Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={handleAddChild}>

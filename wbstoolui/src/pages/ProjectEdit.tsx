@@ -85,7 +85,19 @@ const ProjectEdit = () => {
                                 </Box>
 
                                 <Box flex={1}>
-                                    <Typography variant="h6" color="text.primary" fontWeight="bold">
+                                    <Typography variant="h6" color="text.primary" fontWeight="bold" sx={{ textAlign: 'right' }}>
+                                        Effort
+                                    </Typography>
+                                </Box>
+
+                                <Box flex={1}>
+                                    <Typography variant="h6" color="text.primary" fontWeight="bold" sx={{ textAlign: 'right' }}>
+                                        Ext. Cost
+                                    </Typography>
+                                </Box>
+
+                                <Box flex={1}>
+                                    <Typography variant="h6" color="text.primary" fontWeight="bold" sx={{ textAlign: 'right' }}>
                                         Level/Index
                                     </Typography>
                                 </Box>
@@ -142,7 +154,19 @@ const ProjectEdit = () => {
                                     </Box>
 
                                     <Box flex={1}>
-                                        <Typography variant="body1" color="primary">
+                                        <Typography variant="body1" color="primary" sx={{ textAlign: 'right' }}>
+                                            {element.effortPlanned}
+                                        </Typography>
+                                    </Box>
+
+                                    <Box flex={1}>
+                                        <Typography variant="body1" color="primary" sx={{ textAlign: 'right' }}>
+                                            {element.extCostPlanned}
+                                        </Typography>
+                                    </Box>
+
+                                    <Box flex={1}>
+                                        <Typography variant="body1" color="primary" sx={{ textAlign: 'right' }}>
                                             {element.level}/{element.index}
                                         </Typography>
                                     </Box>

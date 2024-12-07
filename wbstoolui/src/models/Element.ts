@@ -8,6 +8,8 @@ export class Element {
     index: number;
     isCollapsed: boolean; // server
     status: number; // server
+    effortPlanned: number; // server
+    extCostPlanned: number; // server
     parent?: Element;
     elements: Element[]; // server
 
@@ -20,6 +22,8 @@ export class Element {
         this.index = 0;
         this.isCollapsed = false;
         this.status = 0;
+        this.effortPlanned = 0;
+        this.extCostPlanned = 0;
         this.elements = [];
     }
 
@@ -28,7 +32,9 @@ export class Element {
             id: element.id,
             label: element.label,
             isCollapsed: element.isCollapsed,
-            status: element.status
+            status: element.status,
+            effortPlanned: element.effortPlanned,
+            extCostPlanned: element.extCostPlanned
         };
 
         if (element.elements && element.elements.length > 0) {

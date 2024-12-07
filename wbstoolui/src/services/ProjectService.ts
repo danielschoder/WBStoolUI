@@ -46,6 +46,8 @@ export class ProjectService {
         if (element.elements && element.elements.length > 0) {
             let i = 0;
             element.status = 0;
+            element.effortPlanned = 0;
+            element.extCostPlanned = 0;
             let numberOfFinished = 0;
             for (const child of element.elements) {
                 child.parent = element;
@@ -54,6 +56,14 @@ export class ProjectService {
                 child.index = i;
                 this.populateTreeAndList(project, child, parentIsCollapsed || element.isCollapsed);
                 i++;
+                if (!child.effortPlanned) {
+                    child.effortPlanned = 0;
+                }
+                if (!child.extCostPlanned) {
+                    child.extCostPlanned = 0;
+                }
+                element.effortPlanned += child.effortPlanned;
+                element.extCostPlanned += child.extCostPlanned;
                 if (child.status > 0) {
                     element.status = 1;
                 }
