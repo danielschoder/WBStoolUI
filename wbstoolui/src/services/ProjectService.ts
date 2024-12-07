@@ -2,6 +2,8 @@ import { Element } from '../models/Element';
 import { Project } from '../models/Project';
 
 export class ProjectService {
+    public newSelectedElement: Element | null = null;
+
     initializeProject(project: Project): void {
         this.initializeProjectSettings(project);
         this.populateElements(project);
@@ -36,6 +38,8 @@ export class ProjectService {
         const parent = element.parent;
         if (parent) {
             parent.elements.splice(element.index, 1)
+            this.newSelectedElement = parent.elements.length == 0 ? parent
+                : parent.elements[element.index - (element.index >= parent.elements.length ? 1 : 0)];
         }
     }
 

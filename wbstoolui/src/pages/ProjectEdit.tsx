@@ -53,6 +53,10 @@ const ProjectEdit = () => {
     const projectReRender = () => {
         if (project) {
             projectService.populateElements(project);
+            if (projectService.newSelectedElement) {
+                setSelectedElement(projectService.newSelectedElement);
+                projectService.newSelectedElement = null;
+            }
             setProject({ ...project });
         }
     }
