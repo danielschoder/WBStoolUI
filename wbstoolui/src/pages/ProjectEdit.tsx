@@ -70,6 +70,13 @@ const ProjectEdit = () => {
         }
     };
 
+    const handleDelete = () => {
+        if (project && selectedElement) {
+            projectService.DeleteElement(selectedElement);
+            reRender(project);
+        }
+    };
+
     const reRender = (project: Project) => {
         projectService.populateElements(project);
         setProject({ ...project });
@@ -181,6 +188,7 @@ const ProjectEdit = () => {
                                 onLabelChange={handleLabelChange}
                                 onAddChild={handleAddChild}
                                 onAddSibling={handleAddSibling}
+                                onDelete={handleDelete}
                             />
                         ) : (
                             <p>Select an item to edit</p>

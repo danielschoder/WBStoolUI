@@ -32,6 +32,13 @@ export class ProjectService {
         }
     }
 
+    DeleteElement(element: Element) {
+        const parent = element.parent;
+        if (parent) {
+            parent.elements.splice(element.index, 1)
+        }
+    }
+
     private populateTreeAndList(project: Project, element: Element, parentIsCollapsed: boolean): void {
         let i = 0;
         if (!parentIsCollapsed) {
