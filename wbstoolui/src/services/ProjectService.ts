@@ -9,16 +9,16 @@ export class ProjectService {
         this.populateElements(project);
     }
 
-    getItemLabel(element: Element) {
-        return `${element.number} ${element.label}`;
-    }
-
     populateElements(project: Project) {
         project.elements = [];
         this.populateTreeAndList(project, project.rootElement, false);
     }
 
-    AddSubElement(element: Element) {
+    getItemLabel(element: Element) {
+        return `${element.number} ${element.label}`;
+    }
+
+    addSubElement(element: Element) {
         if (!element.elements) {
             element.elements = [];
         }
@@ -26,7 +26,7 @@ export class ProjectService {
         element.elements.push(new Element());
     }
 
-    AddNextElement(element: Element) {
+    addNextElement(element: Element) {
         const parent = element.parent;
         if (parent) {
             parent.isCollapsed = false;
@@ -34,7 +34,7 @@ export class ProjectService {
         }
     }
 
-    DeleteElement(element: Element) {
+    deleteElement(element: Element) {
         const parent = element.parent;
         if (parent) {
             parent.elements.splice(element.index, 1)
@@ -48,26 +48,15 @@ export class ProjectService {
             project.elements.push(element);
         }
         if (element.elements && element.elements.length > 0) {
+            Element.initNumbers(element);
             let i = 0;
-            element.status = 0;
-            element.effortPlanned = 0;
-            element.extCostPlanned = 0;
             let numberOfFinished = 0;
             for (const child of element.elements) {
-                child.parent = element;
-                child.number = `${element.number}.${i + 1}`;
-                child.level = element.level + 1;
-                child.index = i;
+                Element.setTreeProperties(child, element, i);
                 this.populateTreeAndList(project, child, parentIsCollapsed || element.isCollapsed);
                 i++;
-                if (!child.effortPlanned) {
-                    child.effortPlanned = 0;
-                }
-                if (!child.extCostPlanned) {
-                    child.extCostPlanned = 0;
-                }
-                element.effortPlanned += child.effortPlanned;
-                element.extCostPlanned += child.extCostPlanned;
+                Element.initEmptyNumbers(child);
+                Element.accumulateNumbers(element, child);
                 if (child.status > 0) {
                     element.status = 1;
                 }

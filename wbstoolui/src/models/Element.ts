@@ -27,6 +27,33 @@ export class Element {
         this.elements = [];
     }
 
+    static initNumbers(element: Element): void {
+        element.status = 0;
+        element.effortPlanned = 0;
+        element.extCostPlanned = 0;
+    }
+
+    static setTreeProperties(element: Element, parent: Element, i: number): void {
+        element.parent = parent;
+        element.number = `${parent.number}.${i + 1}`;
+        element.level = parent.level + 1;
+        element.index = i;
+    }
+
+    static initEmptyNumbers(element: Element): void {
+        if (!element.effortPlanned) {
+            element.effortPlanned = 0;
+        }
+        if (!element.extCostPlanned) {
+            element.extCostPlanned = 0;
+        }
+    }
+
+    static accumulateNumbers(element: Element, child: Element): void {
+        element.effortPlanned += child.effortPlanned;
+        element.extCostPlanned += child.extCostPlanned;
+    }
+
     static ToDto(element: Element): ElementDto {
         const dto: ElementDto = {
             id: element.id,

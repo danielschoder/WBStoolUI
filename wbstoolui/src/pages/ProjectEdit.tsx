@@ -10,6 +10,7 @@ import PropertiesComponent from "../components/PropertiesComponent";
 import { useServices } from '../hooks/useServices';
 import { Element } from "../models/Element";
 import { Project } from "../models/Project";
+import { formatMoney } from '../utils/formatters';
 
 const ProjectEdit = () => {
     const { projectId } = useParams<{ projectId: string }>();
@@ -100,11 +101,11 @@ const ProjectEdit = () => {
                                     </Typography>
                                 </Box>
 
-                                <Box flex={1}>
-                                    <Typography variant="h6" color="text.primary" fontWeight="bold" sx={{ textAlign: 'right' }}>
-                                        Level/Index
-                                    </Typography>
-                                </Box>
+                            {/*    <Box flex={1}>*/}
+                            {/*        <Typography variant="h6" color="text.primary" fontWeight="bold" sx={{ textAlign: 'right' }}>*/}
+                            {/*            Level/Index*/}
+                            {/*        </Typography>*/}
+                            {/*    </Box>*/}
                             </Box>
                         </ListItem>
 
@@ -165,15 +166,15 @@ const ProjectEdit = () => {
 
                                     <Box flex={1}>
                                         <Typography variant="body1" color="primary" sx={{ textAlign: 'right' }}>
-                                            {element.extCostPlanned}
+                                            {formatMoney(element.extCostPlanned)}
                                         </Typography>
                                     </Box>
 
-                                    <Box flex={1}>
-                                        <Typography variant="body1" color="primary" sx={{ textAlign: 'right' }}>
-                                            {element.level}/{element.index}
-                                        </Typography>
-                                    </Box>
+                                {/*    <Box flex={1}>*/}
+                                {/*        <Typography variant="body1" color="primary" sx={{ textAlign: 'right' }}>*/}
+                                {/*            {element.level}/{element.index}*/}
+                                {/*        </Typography>*/}
+                                {/*    </Box>*/}
                                 </Box>
                             </ListItem>
                         ))}

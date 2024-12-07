@@ -37,21 +37,21 @@ const PropertiesComponent: React.FC<PropertiesComponentProps> = ({
 
     const handleAddChild = () => {
         if (project && selectedElement) {
-            projectService.AddSubElement(selectedElement);
+            projectService.addSubElement(selectedElement);
             onProjectReRender();
         }
     };
 
     const handleAddSibling = () => {
         if (project && selectedElement) {
-            projectService.AddNextElement(selectedElement);
+            projectService.addNextElement(selectedElement);
             onProjectReRender();
         }
     };
 
     const handleDelete = () => {
         if (project && selectedElement) {
-            projectService.DeleteElement(selectedElement);
+            projectService.deleteElement(selectedElement);
             onProjectReRender();
         }
     };
