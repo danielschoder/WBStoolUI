@@ -1,5 +1,6 @@
 export interface ElementDto {
-    id: string;
-    label: string;
-    elements?: ElementDto[];
+    id: string; // server
+    label: string; // server
+    isCollapsed: boolean; // server
+    elements?: ElementDto[]; // server
 }

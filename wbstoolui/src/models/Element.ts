@@ -1,14 +1,14 @@
 import { ElementDto } from "../dtos/ElementDto";
 
 export class Element {
-    id: string;
+    id: string; // server
     number: string;
-    label: string;
+    label: string; // server
     level: number;
     index: number;
-    isCollapsed: boolean;
+    isCollapsed: boolean; // server
     parent?: Element;
-    elements: Element[];
+    elements: Element[]; // server
 
     constructor(
     ) {
@@ -24,6 +24,7 @@ export class Element {
     static ToDto(element: Element): ElementDto {
         const dto: ElementDto = {
             id: element.id,
+            isCollapsed: element.isCollapsed,
             label: element.label
         };
 
