@@ -11,7 +11,7 @@ interface BaseListPageProps<T> {
     title: string;
     apiRoute: string;
     itemsName: string;
-    renderList: (items: T[]) => React.ReactNode;
+    renderList: (items: T[], refreshData: () => void) => React.ReactNode;
 }
 
 function BaseListPage<T>({ title, apiRoute, itemsName, renderList } : BaseListPageProps<T>) {
@@ -22,7 +22,9 @@ function BaseListPage<T>({ title, apiRoute, itemsName, renderList } : BaseListPa
         return storedPage ? parseInt(storedPage, 10) : 1;
     });
     const [pageSize] = useState(15);
-    const { data, loading, error } = useFetchPaginatedData<T>(`${baseUrlWbstool}${apiRoute}`, itemsName, pageNumber, pageSize);
+    const [refreshKey, setRefreshKey] = useState(0);
+    const { data, loading, error }
+        = useFetchPaginatedData<T>(`${baseUrlWbstool}${apiRoute}`, itemsName, pageNumber, pageSize, refreshKey);
 
     if (loading) { return <Loading />; }
     if (error) { return <Error error={error} />; }
@@ -55,7 +57,7 @@ function BaseListPage<T>({ title, apiRoute, itemsName, renderList } : BaseListPa
                 />
             )}
 
-            {renderList(data?.items || [])}
+            {renderList(data?.items || [], () => setRefreshKey((prev) => prev + 1))}
         </Container>
     );
 }

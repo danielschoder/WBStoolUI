@@ -10,7 +10,8 @@ export function useFetchPaginatedData<T>(
     url: string,
     itemsName: string,
     page: number,
-    pageSize: number
+    pageSize: number,
+    refreshkey: number
 )
 {
     const [data, setData] = useState<PaginatedResponseDto<T> | null>(null);
@@ -35,7 +36,7 @@ export function useFetchPaginatedData<T>(
             .finally(() => {
                 setLoading(false);
             });
-    }, [url, itemsName, page, pageSize]);
+    }, [url, itemsName, page, pageSize, refreshkey]);
 
     return { data, loading, error };
 }
