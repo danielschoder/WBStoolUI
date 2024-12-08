@@ -11,22 +11,21 @@ function Projects() {
     const navigate = useNavigate();
     const { projectApiService } = useServices();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-    const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
-    const [selectedProjectName, setSelectedProjectName] = useState<string | null>(null);
+    const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
     const handleAddProject = async () => {
         const newProject = await projectApiService.createProject();
         navigate(`/projects/${newProject.id}/edit`);
     };
 
-    const openDeleteDialog = (projectId: string) => {
-        setSelectedProjectId(projectId);
+    const openDeleteDialog = (project: Project) => {
+        setSelectedProject(project);
         setDeleteDialogOpen(true);
     };
 
     const closeDeleteDialog = () => {
         setDeleteDialogOpen(false);
-        setSelectedProjectId(null);
+        setSelectedProject(null);
     };
 
     return (
@@ -36,8 +35,8 @@ function Projects() {
             itemsName="projects"
             renderList={(projects, refreshData) => {
                 const confirmDeleteProject = async () => {
-                    if (selectedProjectId) {
-                        await projectApiService.deleteProject(selectedProjectId);
+                    if (selectedProject) {
+                        await projectApiService.deleteProject(selectedProject.id);
                         setDeleteDialogOpen(false);
                         refreshData();
                     }
@@ -100,8 +99,7 @@ function Projects() {
                                             edge="end"
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                setSelectedProjectName(project.name);
-                                                openDeleteDialog(project.id);
+                                                openDeleteDialog(project);
                                             }}>
                                             <DeleteIcon />
                                         </IconButton>
@@ -114,8 +112,7 @@ function Projects() {
                             <DialogTitle>Confirm Project Deletion</DialogTitle>
                             <DialogContent>
                                 <DialogContentText>
-                                    Are you sure you want to delete <b>{selectedProjectName}</b>?
-                                    <br />
+                                    Are you sure you want to delete <b>{selectedProject?.name}</b>?
                                     <br />This action cannot be undone.
                                 </DialogContentText>
                             </DialogContent>
