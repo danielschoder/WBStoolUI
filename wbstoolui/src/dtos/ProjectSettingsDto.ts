@@ -1,3 +1,3 @@
 export interface ProjectSettingsDto {
-    expandedElementIds: string[];
+    currencySymbol: string;
 }

@@ -10,6 +10,20 @@ export class ProjectApiService {
         private authApiService: AuthApiService
     ) { }
 
+    async createProject(): Promise<Project> {
+        try {
+            const response = await axios.post(`${baseUrlWbstool}/projects`, null, {
+                headers: {
+                    ...this.authApiService.getAuthHeaders(),
+                    'Content-Type': 'application/json',
+                },
+            });
+            return response.data as Project;
+        } catch (error) {
+            throw new Error('Failed to create project: ' + error);
+        }
+    }
+
     async getProject(projectId: string): Promise<Project> {
         try {
             const response = await axios.get(`${baseUrlWbstool}/projects/${projectId}`, {
@@ -33,6 +47,16 @@ export class ProjectApiService {
             });
         } catch (error) {
             throw new Error('Failed to update project: ' + error);
+        }
+    }
+
+    async deleteProject(projectId: string): Promise<void> {
+        try {
+            await axios.delete(`${baseUrlWbstool}/projects/${projectId}`, {
+                headers: this.authApiService.getAuthHeaders(),
+            });
+        } catch (error) {
+            throw new Error('Failed to delete project: ' + error);
         }
     }
 }

@@ -1,20 +1,22 @@
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Button, IconButton, List, ListItem, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useServices } from '../hooks/useServices';
 import { Project } from '../models/Project';
 import BaseListPage from './BaseListPage';
 
 function Projects() {
     const navigate = useNavigate();
+    const { projectApiService } = useServices();
 
-    const handleAddProject = () => {
-        navigate('/projects/new'); // Navigate to a form to create a new project
+    const handleAddProject = async () => {
+        const newProject = await projectApiService.createProject();
+        navigate(`/projects/${newProject.id}/edit`);
     };
 
-    const handleDeleteProject = (projectId: string, refreshData: () => void) => {
-        // Implement deletion logic
-        console.log(`Delete project with ID: ${projectId}`);
+    const handleDeleteProject = async (projectId: string, refreshData: () => void) => {
+        await projectApiService.deleteProject(projectId);
         refreshData();
     };
 

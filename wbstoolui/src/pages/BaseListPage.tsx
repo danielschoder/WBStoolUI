@@ -1,11 +1,11 @@
-import { Box, Container, IconButton, Pagination, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { Box, Container, IconButton, Pagination, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { baseUrlWbstool } from '../constants';
+import { useNavigate } from 'react-router-dom';
 import Error from '../components/Error';
 import Loading from '../components/Loading';
+import { baseUrlWbstool } from '../constants';
 import { useFetchPaginatedData } from '../hooks/useFetchPaginatedData';
-import { useNavigate } from 'react-router-dom';
 
 interface BaseListPageProps<T> {
     title: string;

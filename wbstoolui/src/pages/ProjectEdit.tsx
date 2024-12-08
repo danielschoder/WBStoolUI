@@ -183,7 +183,7 @@ const ProjectEdit = () => {
 
                 <Box sx={{ borderLeft: '2px solid #ccc', height: 'auto', mr: 2 }} />
 
-                <Box sx={{ width: '400px', position: 'relative' }}>
+                <Box sx={{ width: '400px', position: 'relative', mt: '9px' }}>
                     <Box sx={{ mb: 2 }}>
                         <Button variant="contained" color="primary" onClick={saveProject} startIcon={<SaveIcon />} fullWidth>
                             Save Project

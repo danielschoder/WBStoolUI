@@ -29,7 +29,9 @@ export class Project {
 
     static ToDto(project: Project): ProjectDto {
         const rootElement = Element.ToDto(project.rootElement);
-        rootElement.elements = project.rootElement.elements.map(element => Element.ToDto(element));
+        if (rootElement.elements && rootElement.elements.length > 0) {
+            rootElement.elements = project.rootElement.elements.map(element => Element.ToDto(element));
+        }
         return {
             id: project.id,
             name: project.name,
