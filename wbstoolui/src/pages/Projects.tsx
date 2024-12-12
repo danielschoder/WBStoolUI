@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useServices } from '../hooks/useServices';
 import { Project } from '../models/Project';
-import BaseListPage from './BaseListPage';
+import BasePaginatedListPage from './BasePaginatedListPage';
 
 function Projects() {
     const navigate = useNavigate();
@@ -29,7 +29,7 @@ function Projects() {
     };
 
     return (
-        <BaseListPage<Project>
+        <BasePaginatedListPage<Project>
             title="My Projects"
             apiRoute="/projects"
             itemsName="projects"

@@ -3,6 +3,7 @@ import { baseUrlWbstool } from '../constants';
 import { Project } from '../models/Project';
 import { ProjectService } from '../services/ProjectService';
 import { AuthApiService } from './AuthApiService';
+import { Person } from '../models/Person';
 
 export class ProjectApiService {
     constructor(
@@ -57,6 +58,30 @@ export class ProjectApiService {
             });
         } catch (error) {
             throw new Error('Failed to delete project: ' + error);
+        }
+    }
+
+    async addPerson(projectId: string): Promise<Person> {
+        try {
+            const response = await axios.post(`${baseUrlWbstool}/projects/${projectId}/persons`, null, {
+                headers: {
+                    ...this.authApiService.getAuthHeaders(),
+                    'Content-Type': 'application/json',
+                },
+            });
+            return response.data as Person;
+        } catch (error) {
+            throw new Error('Failed to add person: ' + error);
+        }
+    }
+
+    async removePerson(projectId: string, personId: string): Promise<void> {
+        try {
+            await axios.delete(`${baseUrlWbstool}/projects/${projectId}/persons/${personId}`, {
+                headers: this.authApiService.getAuthHeaders(),
+            });
+        } catch (error) {
+            throw new Error('Failed to delete person: ' + error);
         }
     }
 }
