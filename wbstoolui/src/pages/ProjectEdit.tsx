@@ -11,9 +11,11 @@ import { useServices } from '../hooks/useServices';
 import { Element } from "../models/Element";
 import { Project } from "../models/Project";
 import { formatMoney } from '../utils/formatters';
+import { useCurrentProject } from '../hooks/useCurrentProject';
 
 const ProjectEdit = () => {
     const { projectId } = useParams<{ projectId: string }>();
+    const { setProjectId } = useCurrentProject();
     const [project, setProject] = useState<Project | null>(null);
     const [selectedElement, setSelectedElement] = useState<Element | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -22,6 +24,7 @@ const ProjectEdit = () => {
 
     useEffect(() => {
         if (!projectId) return;
+        setProjectId(projectId);
 
         const fetchProject = async () => {
             try {
@@ -35,7 +38,7 @@ const ProjectEdit = () => {
         };
 
         fetchProject();
-    }, [projectApiService, projectId]);
+    }, [projectApiService, projectId, setProjectId]);
 
     const handleElementSelected = (element: Element) => {
         setSelectedElement(element);
