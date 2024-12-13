@@ -6,9 +6,9 @@ import DrawerComponent from './components/DrawerComponent';
 //import { useServices } from './hooks/useServices';
 import ProjectEdit from './pages/ProjectEdit';
 import Projects from './pages/Projects';
-import TeamEdit from './pages/TeamEdit';
-import { ServiceProvider } from './services/ServiceProvider';
+import Persons from './pages/Persons';
 import { CurrentProjectProvider } from './services/CurrentProjectProvider';
+import { ServiceProvider } from './services/ServiceProvider';
 
 const App: React.FC = () => {
     //const { authApiService } = useServices();
@@ -33,7 +33,7 @@ const App: React.FC = () => {
                         <Route path="/" element={<Navigate to="/projects/96b9faa7-a37b-4d4c-8b79-461979ed5080/edit" replace />} />
                         <Route path="/projects/:projectId/edit" element={<ProjectEdit />} />
                         <Route path="/projects" element={<Projects />} />
-                        <Route path="/teams/:projectId/edit" element={<TeamEdit />} />
+                        <Route path="/persons" element={<Persons />} />
                     </Routes>
                 </Router>
             </CurrentProjectProvider>

@@ -1,16 +1,16 @@
 import { Drawer, List, ListItem, ListItemText } from '@mui/material';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useCurrentProject } from '../hooks/useCurrentProject';
+//import { useCurrentProject } from '../hooks/useCurrentProject';
 
 const DrawerComponent: React.FC<{
     drawerOpen: boolean;
     setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }> = ({ drawerOpen, setDrawerOpen }) => {
-    const { projectId } = useCurrentProject();
+    //const { project } = useCurrentProject();
     const menuItems = [
         { label: 'Home', path: '/' },
-        { label: 'Team', path: `/teams/${projectId}/edit` },
+        { label: 'Persons & Roles', path: '/persons' },
         { label: 'My Projects', path: '/projects' }
     ];
 

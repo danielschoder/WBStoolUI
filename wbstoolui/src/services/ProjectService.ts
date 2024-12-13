@@ -43,6 +43,12 @@ export class ProjectService {
         }
     }
 
+    removePerson(project: Project, personId: string) {
+        if (project && project.persons) {
+            project.persons = project.persons.filter(person => person.id !== personId);
+        }
+    }
+
     private populateTreeAndList(project: Project, element: Element, parentIsCollapsed: boolean): void {
         if (!parentIsCollapsed) {
             project.elements.push(element);

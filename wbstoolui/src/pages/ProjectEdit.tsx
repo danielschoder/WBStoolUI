@@ -7,16 +7,14 @@ import { useParams } from "react-router-dom";
 import Error from '../components/Error';
 import Loading from "../components/Loading";
 import PropertiesComponent from "../components/PropertiesComponent";
+import { useCurrentProject } from '../hooks/useCurrentProject';
 import { useServices } from '../hooks/useServices';
 import { Element } from "../models/Element";
-import { Project } from "../models/Project";
 import { formatMoney } from '../utils/formatters';
-import { useCurrentProject } from '../hooks/useCurrentProject';
 
 const ProjectEdit = () => {
     const { projectId } = useParams<{ projectId: string }>();
-    const { setProjectId } = useCurrentProject();
-    const [project, setProject] = useState<Project | null>(null);
+    const { project, setProject } = useCurrentProject();  // Use full project from context
     const [selectedElement, setSelectedElement] = useState<Element | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -24,7 +22,6 @@ const ProjectEdit = () => {
 
     useEffect(() => {
         if (!projectId) return;
-        setProjectId(projectId);
 
         const fetchProject = async () => {
             try {
@@ -38,7 +35,7 @@ const ProjectEdit = () => {
         };
 
         fetchProject();
-    }, [projectApiService, projectId, setProjectId]);
+    }, [projectApiService, projectId, setProject]);
 
     const handleElementSelected = (element: Element) => {
         setSelectedElement(element);
