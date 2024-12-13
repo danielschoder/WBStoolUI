@@ -197,7 +197,7 @@ const ProjectEdit = () => {
                                 onProjectReRender={projectReRender}
                             />
                         ) : (
-                            <p>Select an item to edit</p>
+                            <p>Select an element to edit</p>
                         )}
                     </Box>
                 </Box>

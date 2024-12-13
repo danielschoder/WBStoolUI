@@ -5,11 +5,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentProject } from '../hooks/useCurrentProject';
 //import { useServices } from '../hooks/useServices';
+import PersonPropertiesComponent from '../components/PersonPropertiesComponent';
 import { Person } from '../models/Person';
 
 const Persons = () => {
     const navigate = useNavigate();
-    const { project } = useCurrentProject();
+    const { project, setProject } = useCurrentProject();
     //const { projectService } = useServices();
     const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
 
@@ -31,87 +32,118 @@ const Persons = () => {
     //    }
     //}
 
+    const projectReRender = () => {
+        if (project) {
+            setProject({ ...project });
+        }
+    }
+
     if (!project) {
         return <Typography variant="h6">Project not found</Typography>;
     }
 
     return (
-        <Container sx={{ mb: 4 }}>
-            <Box display="flex" alignItems="center" mb={2} mt={2}>
-                <IconButton onClick={() => navigate('/')} color="primary" style={{ marginRight: '16px' }}>
-                    <ArrowBackIcon fontSize="large" />
-                </IconButton>
-                <Typography variant="h2">
-                    Persons & Roles
-                </Typography>
-            </Box>
-
-            <Box display="flex" justifyContent="flex-end" mb={2}>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<AddIcon />}
-                    onClick={handleAddPerson}
-                >
-                    Add Person
-                </Button>
-            </Box>
-
-            <List>
-                <ListItem sx={{ backgroundColor: "#e0e0e0", mb: 1, borderRadius: 1 }}>
-                    <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
-                        <Box flex={1}>
-                            <Typography variant="h6" color="text.primary" fontWeight="bold">
-                                Name
-                            </Typography>
-                        </Box>
-
-                        <Box flex={1}>
-                            <Typography variant="h6" color="text.primary" fontWeight="bold">
-                                Email
-                            </Typography>
-                        </Box>
-
-                        <Box flex={1}>
-                            <Typography variant="h6" color="text.primary" fontWeight="bold">
-                                Role
-                            </Typography>
-                        </Box>
+        <Container sx={{ mb: 4 }} maxWidth={false}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
+                <Box sx={{ flex: 1, mr: 2 }}>
+                    <Box display="flex" alignItems="center" mb={2} mt={2}>
+                        <IconButton onClick={() => navigate('/')} color="primary" style={{ marginRight: '16px' }}>
+                            <ArrowBackIcon fontSize="large" />
+                        </IconButton>
+                        <Typography variant="h2">
+                            Persons & Roles
+                        </Typography>
                     </Box>
-                </ListItem>
-                {project.persons?.map((person) => (
-                    <ListItem
-                        key={person.id}
-                        sx={{
-                            backgroundColor: selectedPerson?.id === person.id ? "#ecf1f1" : "#f5f5f5",
-                            mb: 1,
-                            borderRadius: 1,
-                            cursor: 'pointer'
-                        }}
-                        onClick={() => handlePersonSelected(person)}
-                    >
-                        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
-                            <Box flex={1}>
-                                <Typography variant="body1" color="text.secondary" fontWeight="bold">
-                                    {person.name}
-                                </Typography>
-                            </Box>
 
-                            <Box flex={1}>
-                                <Typography variant="body1" color="text.secondary" fontWeight="bold">
-                                    {person.email}
-                                </Typography>
-                            </Box>
+                    <Box display="flex" justifyContent="flex-end" mb={2}>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<AddIcon />}
+                            onClick={handleAddPerson}
+                        >
+                            Add Person
+                        </Button>
+                    </Box>
 
-                            <Box flex={1}>
-                                <Typography variant="body1" color="text.secondary" fontWeight="bold">
-                                    {person.role}
-                                </Typography>
+                    <List>
+                        <ListItem sx={{ backgroundColor: "#e0e0e0", mb: 1, borderRadius: 1 }}>
+                            <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
+                                <Box flex={1}>
+                                    <Typography variant="h6" color="text.primary" fontWeight="bold">
+                                        Name
+                                    </Typography>
+                                </Box>
+
+                                <Box flex={1}>
+                                    <Typography variant="h6" color="text.primary" fontWeight="bold">
+                                        Email
+                                    </Typography>
+                                </Box>
+
+                                <Box flex={1}>
+                                    <Typography variant="h6" color="text.primary" fontWeight="bold">
+                                        Role
+                                    </Typography>
+                                </Box>
                             </Box>
-                        </Box>
-                    </ListItem>
-                ))}
-            </List>
+                        </ListItem>
+                        {project.persons?.map((person) => (
+                            <ListItem
+                                key={person.id}
+                                sx={{
+                                    backgroundColor: selectedPerson?.id === person.id ? "#ecf1f1" : "#f5f5f5",
+                                    mb: 1,
+                                    borderRadius: 1,
+                                    cursor: 'pointer'
+                                }}
+                                onClick={() => handlePersonSelected(person)}
+                            >
+                                <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
+                                    <Box flex={1}>
+                                        <Typography variant="body1" color="text.secondary" fontWeight="bold">
+                                            {person.name}
+                                        </Typography>
+                                    </Box>
+
+                                    <Box flex={1}>
+                                        <Typography variant="body1" color="text.secondary" fontWeight="bold">
+                                            {person.email}
+                                        </Typography>
+                                    </Box>
+
+                                    <Box flex={1}>
+                                        <Typography variant="body1" color="text.secondary" fontWeight="bold">
+                                            {person.role}
+                                        </Typography>
+                                    </Box>
+                                </Box>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Box>
+
+                <Box sx={{ borderLeft: '2px solid #ccc', height: 'auto', mr: 2 }} />
+
+                <Box sx={{ width: '400px', position: 'relative', mt: '9px' }}>
+                    {/*<Box sx={{ mb: 2 }}>*/}
+                    {/*    <Button variant="contained" color="primary" onClick={saveProject} startIcon={<SaveIcon />} fullWidth>*/}
+                    {/*        Save Project*/}
+                    {/*    </Button>*/}
+                    {/*</Box>*/}
+                    <Box sx={{ mt: 2 }}>
+                        {selectedPerson ? (
+                            <PersonPropertiesComponent
+                                project={project}
+                                selectedPerson={selectedPerson}
+                                onProjectReRender={projectReRender}
+                            />
+                        ) : (
+                            <p>Select a person to edit</p>
+                        )}
+                    </Box>
+                </Box>
+            </Box>
         </Container>
     );
 }
