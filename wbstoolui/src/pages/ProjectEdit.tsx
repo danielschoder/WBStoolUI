@@ -14,7 +14,7 @@ import { formatMoney } from '../utils/formatters';
 
 const ProjectEdit = () => {
     const { projectId } = useParams<{ projectId: string }>();
-    const { project, setProject } = useCurrentProject();  // Use full project from context
+    const { project, setProject } = useCurrentProject();
     const [selectedElement, setSelectedElement] = useState<Element | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);

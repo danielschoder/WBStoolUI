@@ -1,17 +1,21 @@
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, Button, Container, IconButton, List, ListItem, Typography } from '@mui/material';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCurrentProject } from '../hooks/useCurrentProject';
-//import { useState } from 'react';
 //import { useServices } from '../hooks/useServices';
-//import { Person } from '../models/Person';
+import { Person } from '../models/Person';
 
-function Persons() {
+const Persons = () => {
     const navigate = useNavigate();
     const { project } = useCurrentProject();
     //const { projectService } = useServices();
-    //const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+    const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+
+    const handlePersonSelected = (person: Person) => {
+        setSelectedPerson(person);
+    };
 
     const handleAddPerson = async () => {
         if (project) {
@@ -78,7 +82,13 @@ function Persons() {
                 {project.persons?.map((person) => (
                     <ListItem
                         key={person.id}
-                        sx={{ backgroundColor: "#f5f5f5", mb: 1, borderRadius: 1, cursor: 'pointer' }}
+                        sx={{
+                            backgroundColor: selectedPerson?.id === person.id ? "#ecf1f1" : "#f5f5f5",
+                            mb: 1,
+                            borderRadius: 1,
+                            cursor: 'pointer'
+                        }}
+                        onClick={() => handlePersonSelected(person)}
                     >
                         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
                             <Box flex={1}>

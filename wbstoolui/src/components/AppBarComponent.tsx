@@ -3,6 +3,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { AppBar, Box, Button, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCurrentProject } from '../hooks/useCurrentProject';
 import { useServices } from '../hooks/useServices';
 import LoginDialog from './LoginDialog';
 import RegisterDialog from './RegisterDialog';
@@ -15,6 +16,7 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
     setDrawerOpen
 }) => {
     const navigate = useNavigate();
+    const { project } = useCurrentProject();
     const { authApiService } = useServices();
     const [isAuthenticated, setAuthenticated] = useState(authApiService.isAuthenticated());
     const [isLoginDialogOpen, setOpenLoginDialog] = useState(false);
@@ -32,7 +34,7 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" component="div">
-                    WBStool
+                    WBStool{project ? ` - ${project.name}` : ``}
                 </Typography>
                 <Box sx={{ ml: 'auto' }}>
                     {isAuthenticated ? (
