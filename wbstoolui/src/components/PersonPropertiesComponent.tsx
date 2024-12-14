@@ -63,9 +63,29 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
     //    }
     //};
 
+                {/*disabled={selectedPerson?.elements?.length > 0}*/}
+                {/*onChange={(e) => handleEffortChange(e.target.value)}*/}
     return (
         <Box>
             <TextField
+                label="Name"
+                value={selectedPerson.name}
+                disabled={true}
+                fullWidth
+                variant="outlined"
+            />
+
+            <TextField
+                sx={{ mt: 2 }}
+                label="Email"
+                value={selectedPerson.email}
+                disabled={true}
+                fullWidth
+                variant="outlined"
+            />
+
+            <TextField
+                sx={{ mt: 2 }}
                 label="Role"
                 value={selectedPerson.role}
                 onChange={(e) => handleRoleChange(e.target.value)}
@@ -87,17 +107,6 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
             {/*        <MenuItem value={2}>Finished</MenuItem>*/}
             {/*    </Select>*/}
             {/*</FormControl>*/}
-
-            {/*<TextField*/}
-            {/*    sx={{ mt: 2 }}*/}
-            {/*    label="Internal Effort"*/}
-            {/*    type="number"*/}
-            {/*    value={selectedPerson.effortPlanned}*/}
-            {/*    disabled={selectedPerson?.elements?.length > 0}*/}
-            {/*    onChange={(e) => handleEffortChange(e.target.value)}*/}
-            {/*    fullWidth*/}
-            {/*    variant="outlined"*/}
-            {/*/>*/}
 
             {/*<TextField*/}
             {/*    sx={{ mt: 2 }}*/}

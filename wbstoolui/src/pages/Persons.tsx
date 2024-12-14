@@ -46,16 +46,10 @@ const Persons = () => {
         <Container sx={{ mb: 4 }} maxWidth={false}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                 <Box sx={{ flex: 1, mr: 2 }}>
-                    <Box display="flex" alignItems="center" mb={2} mt={2}>
-                        <IconButton onClick={() => navigate('/')} color="primary" style={{ marginRight: '16px' }}>
-                            <ArrowBackIcon fontSize="large" />
-                        </IconButton>
+                    <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} mt={2}>
                         <Typography variant="h2">
                             Persons & Roles
                         </Typography>
-                    </Box>
-
-                    <Box display="flex" justifyContent="flex-end" mb={2}>
                         <Button
                             variant="contained"
                             color="primary"
@@ -126,20 +120,13 @@ const Persons = () => {
                 <Box sx={{ borderLeft: '2px solid #ccc', height: 'auto', mr: 2 }} />
 
                 <Box sx={{ width: '400px', position: 'relative', mt: '9px' }}>
-                    {/*<Box sx={{ mb: 2 }}>*/}
-                    {/*    <Button variant="contained" color="primary" onClick={saveProject} startIcon={<SaveIcon />} fullWidth>*/}
-                    {/*        Save Project*/}
-                    {/*    </Button>*/}
-                    {/*</Box>*/}
                     <Box sx={{ mt: 2 }}>
-                        {selectedPerson ? (
+                        {selectedPerson && (
                             <PersonPropertiesComponent
                                 project={project}
                                 selectedPerson={selectedPerson}
                                 onProjectReRender={projectReRender}
                             />
-                        ) : (
-                            <p>Select a person to edit</p>
                         )}
                     </Box>
                 </Box>

@@ -190,14 +190,12 @@ const ProjectEdit = () => {
                         </Button>
                     </Box>
                     <Box sx={{ mt: 2 }}>
-                        {selectedElement ? (
+                        {selectedElement && (
                             <PropertiesComponent
                                 project={project}
                                 selectedElement={selectedElement}
                                 onProjectReRender={projectReRender}
                             />
-                        ) : (
-                            <p>Select an element to edit</p>
                         )}
                     </Box>
                 </Box>
