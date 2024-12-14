@@ -7,10 +7,10 @@ export class Person {
     role: string;
 
     constructor(
-        id: string,
-        name: string,
-        email: string,
-        role: string
+        id: string = '',
+        name: string = '',
+        email: string = '',
+        role: string = ''
     ) {
         this.id = id;
         this.name = name;

@@ -1,18 +1,19 @@
-import { Box, TextField } from "@mui/material";
-//import { useServices } from '../hooks/useServices';
-import { Person } from "../models/Person";
+import { Box, Button, TextField } from "@mui/material";
+import { useServices } from '../hooks/useServices';
 import { Project } from "../models/Project";
+import { PersonDto } from "../dtos/PersonDto";
 
 interface PersonPropertiesComponentProps {
     project: Project;
-    selectedPerson: Person;
+    selectedPerson: PersonDto;
     onProjectReRender: () => void;
+    onClearSelectedPerson?: () => void;
 }
 
 const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
-    project, selectedPerson, onProjectReRender
+    project, selectedPerson, onClearSelectedPerson, onProjectReRender
 }) => {
-    //const { projectService } = useServices();
+    const { projectService } = useServices();
 
     const handleRoleChange = (newRole: string) => {
         if (project && selectedPerson) {
@@ -35,12 +36,24 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
     //    }
     //};
 
-    //const handleAddChild = () => {
-    //    if (project && selectedPerson) {
-    //        projectService.addSubElement(selectedPerson);
-    //        onProjectReRender();
-    //    }
-    //};
+    const handleAddNewPerson = () => {
+        if (project) {
+            projectService.addPerson(project);
+            if (onClearSelectedPerson) {
+                onClearSelectedPerson();
+            }
+            onProjectReRender();
+        }
+    };
+
+    const handleCancelAddNewPerson = () => {
+        if (project) {
+            if (onClearSelectedPerson) {
+                onClearSelectedPerson();
+            }
+            onProjectReRender();
+        }
+    };
 
     //const handleAddSibling = () => {
     //    if (project && selectedPerson) {
@@ -118,18 +131,19 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
             {/*    fullWidth*/}
             {/*    variant="outlined"*/}
             {/*/>*/}
-
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
-                {/*<Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={handleAddChild}>*/}
-                {/*    Add Sub*/}
-                {/*</Button>*/}
-                {/*<Button variant="contained" color="primary" sx={{ flex: 1 }} disabled={!selectedPerson?.parent} onClick={handleAddSibling}>*/}
-                {/*    Add Next*/}
-                {/*</Button>*/}
-            {/*    <Button variant="contained" color="primary" sx={{ flex: 1 }} disabled={!selectedPerson} onClick={handleDelete}>*/}
-            {/*        Delete*/}
-            {/*    </Button>*/}
-            </Box>
+            {selectedPerson.id === '' && (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
+                    <Button variant="outlined" color="primary" sx={{ flex: 1 }} onClick={handleCancelAddNewPerson}>
+                        Cancel
+                    </Button>
+                    <Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={handleAddNewPerson}>
+                        Add
+                    </Button>
+                    {/*    <Button variant="contained" color="primary" sx={{ flex: 1 }} disabled={!selectedPerson} onClick={handleDelete}>*/}
+                    {/*        Delete*/}
+                    {/*    </Button>*/}
+                </Box>
+            )}
         </Box>
     );
 };

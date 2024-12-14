@@ -1,29 +1,41 @@
 import AddIcon from '@mui/icons-material/Add';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Button, Container, IconButton, List, ListItem, Typography } from '@mui/material';
+import { Box, Button, Container, List, ListItem, Typography } from '@mui/material';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import PersonPropertiesComponent from '../components/PersonPropertiesComponent';
 import { useCurrentProject } from '../hooks/useCurrentProject';
 //import { useServices } from '../hooks/useServices';
-import PersonPropertiesComponent from '../components/PersonPropertiesComponent';
+import { PersonDto } from '../dtos/PersonDto';
 import { Person } from '../models/Person';
 
 const Persons = () => {
-    const navigate = useNavigate();
     const { project, setProject } = useCurrentProject();
     //const { projectService } = useServices();
-    const [selectedPerson, setSelectedPerson] = useState<Person | null>(null);
+    const [selectedPerson, setSelectedPerson] = useState<PersonDto | null>(null);
+    const [newPerson, setNewPerson] = useState<PersonDto | null>(null);
 
-    const handlePersonSelected = (person: Person) => {
-        setSelectedPerson(person);
-    };
-
-    const handleAddPerson = async () => {
-        if (project) {
-            //await projectApiService.addPerson(project.id);
-            //    navigate(`/projects/${newPerson.id}/edit`);
+    const handlePersonSelected = (person: PersonDto) => {
+        if (!newPerson) {
+            setSelectedPerson(person);
         }
     };
+
+    const handleAddNewPerson = async () => {
+        if (project) {
+            setSelectedPerson(null);
+            setNewPerson(Person.ToDto(new Person()));
+        }
+    };
+
+    const clearSelectedPerson = () => {
+        setNewPerson(null);
+    };
+
+    //const handleAddPerson = async () => {
+    //    if (project) {
+    //        const newPerson = projectService.addPerson(project);
+    //        setSelectedPerson(newPerson);
+    //    }
+    //};
 
     //const handleRemovePerson = async () => {
     //    if (project && selectedPerson) {
@@ -54,7 +66,8 @@ const Persons = () => {
                             variant="contained"
                             color="primary"
                             startIcon={<AddIcon />}
-                            onClick={handleAddPerson}
+                            disabled={newPerson !== null}
+                            onClick={handleAddNewPerson}
                         >
                             Add Person
                         </Button>
@@ -121,11 +134,19 @@ const Persons = () => {
 
                 <Box sx={{ width: '400px', position: 'relative', mt: '9px' }}>
                     <Box sx={{ mt: 2 }}>
-                        {selectedPerson && (
+                        {(selectedPerson) && (
                             <PersonPropertiesComponent
                                 project={project}
                                 selectedPerson={selectedPerson}
                                 onProjectReRender={projectReRender}
+                            />
+                        )}
+                        {(newPerson) && (
+                            <PersonPropertiesComponent
+                                project={project}
+                                selectedPerson={newPerson}
+                                onProjectReRender={projectReRender}
+                                onClearSelectedPerson={clearSelectedPerson}
                             />
                         )}
                     </Box>

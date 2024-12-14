@@ -1,4 +1,6 @@
+import { PersonDto } from '../dtos/PersonDto';
 import { Element } from '../models/Element';
+import { Person } from '../models/Person';
 import { Project } from '../models/Project';
 
 export class ProjectService {
@@ -41,6 +43,14 @@ export class ProjectService {
             this.newSelectedElement = parent.elements.length == 0 ? parent
                 : parent.elements[element.index - (element.index >= parent.elements.length ? 1 : 0)];
         }
+    }
+
+    addPerson(project: Project): PersonDto | null {
+        if (project && project.persons) {
+            const newPerson = Person.ToDto(new Person(crypto.randomUUID()));
+            project.persons.push(newPerson);
+        }
+        return null;
     }
 
     removePerson(project: Project, personId: string) {
