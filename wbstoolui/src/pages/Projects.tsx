@@ -3,19 +3,26 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, List, ListItem, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCurrentProject } from '../hooks/useCurrentProject';
 import { useServices } from '../hooks/useServices';
 import { Project } from '../models/Project';
 import BasePaginatedListPage from './BasePaginatedListPage';
 
 function Projects() {
     const navigate = useNavigate();
+    const { setProject } = useCurrentProject();
     const { projectApiService } = useServices();
     const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
     const handleAddProject = async () => {
-        const newProject = await projectApiService.createProject();
-        navigate(`/projects/${newProject.id}/edit`);
+        setProject(await projectApiService.createProject());
+        navigate("/tasklist");
+    };
+
+    const handleSelectProject = async (project: Project) => {
+        setProject(await projectApiService.getProject(project.id));
+        navigate(`/tasklist`);
     };
 
     const openDeleteDialog = (project: Project) => {
@@ -74,7 +81,7 @@ function Projects() {
                                 <ListItem
                                     key={project.id}
                                     sx={{ backgroundColor: "#f5f5f5", mb: 1, borderRadius: 1, cursor: 'pointer' }}
-                                    onClick={() => navigate(`/projects/${project.id}/edit`)}
+                                    onClick={() => handleSelectProject(project)}
                                 >
                                     <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
                                         <Box flex={1}>

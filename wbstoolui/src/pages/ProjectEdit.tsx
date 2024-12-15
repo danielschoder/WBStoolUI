@@ -2,10 +2,11 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SaveIcon from '@mui/icons-material/Save';
 import { Box, Button, Container, IconButton, List, ListItem, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Error from '../components/Error';
-import Loading from "../components/Loading";
+//import { useEffect, useState } from "react";
+import { useState } from "react";
+//import { useParams } from "react-router-dom";
+//import Error from '../components/Error';
+//import Loading from "../components/Loading";
 import PropertiesComponent from "../components/PropertiesComponent";
 import { useCurrentProject } from '../hooks/useCurrentProject';
 import { useServices } from '../hooks/useServices';
@@ -13,29 +14,29 @@ import { Element } from "../models/Element";
 import { formatMoney } from '../utils/formatters';
 
 const ProjectEdit = () => {
-    const { projectId } = useParams<{ projectId: string }>();
+    //const { projectId } = useParams<{ projectId: string }>();
     const { project, setProject } = useCurrentProject();
     const [selectedElement, setSelectedElement] = useState<Element | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    //const [loading, setLoading] = useState<boolean>(true);
+    //const [error, setError] = useState<string | null>(null);
     const { projectService, projectApiService } = useServices();
 
-    useEffect(() => {
-        if (!projectId) return;
+    //useEffect(() => {
+    //    if (!projectId) return;
 
-        const fetchProject = async () => {
-            try {
-                setLoading(true);
-                setProject(await projectApiService.getProject(projectId));
-            } catch {
-                setError("Failed to fetch project.");
-            } finally {
-                setLoading(false);
-            }
-        };
+    //    const fetchProject = async () => {
+    //        try {
+    //            setLoading(true);
+    //            setProject(await projectApiService.getProject(projectId));
+    //        } catch {
+    //            setError("Failed to fetch project.");
+    //        } finally {
+    //            setLoading(false);
+    //        }
+    //    };
 
-        fetchProject();
-    }, [projectApiService, projectId, setProject]);
+    //    fetchProject();
+    //}, [projectApiService, projectId, setProject]);
 
     const handleElementSelected = (element: Element) => {
         setSelectedElement(element);
@@ -68,8 +69,8 @@ const ProjectEdit = () => {
         }
     };
 
-    if (loading) { return <Loading />; }
-    if (error) { return <Error error={error} />; }
+    //if (loading) { return <Loading />; }
+    //if (error) { return <Error error={error} />; }
     if (project) {
         return <Container maxWidth={false}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2, height: 'calc(100vh - 64px - 24px)' }}>

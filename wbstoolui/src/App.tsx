@@ -30,9 +30,9 @@ const App: React.FC = () => {
                         setDrawerOpen={setDrawerOpen}
                     />
                     <Routes>
-                        <Route path="/" element={<Navigate to="/projects/96b9faa7-a37b-4d4c-8b79-461979ed5080/edit" replace />} />
-                        <Route path="/projects/:projectId/edit" element={<ProjectEdit />} />
+                        <Route path="/" element={<Navigate to="/projects" replace />} />
                         <Route path="/projects" element={<Projects />} />
+                        <Route path="/tasklist" element={<ProjectEdit />} />
                         <Route path="/persons" element={<Persons />} />
                     </Routes>
                 </Router>

@@ -9,7 +9,7 @@ const DrawerComponent: React.FC<{
 }> = ({ drawerOpen, setDrawerOpen }) => {
     //const { project } = useCurrentProject();
     const menuItems = [
-        { label: 'Task List', path: '/' },
+        { label: 'Task List', path: '/tasklist' },
         { label: 'Persons & Roles', path: '/persons' },
         { label: 'My Projects', path: '/projects' }
     ];
