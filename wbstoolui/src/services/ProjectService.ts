@@ -45,10 +45,10 @@ export class ProjectService {
         }
     }
 
-    addPerson(project: Project): PersonDto | null {
+    addPerson(project: Project, person: PersonDto): PersonDto | null {
         if (project && project.persons) {
-            const newPerson = Person.ToDto(new Person(crypto.randomUUID()));
-            project.persons.push(newPerson);
+            person.id = crypto.randomUUID();
+            project.persons.push(person);
         }
         return null;
     }

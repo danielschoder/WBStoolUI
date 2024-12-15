@@ -11,24 +11,23 @@ const Persons = () => {
     const { project, setProject } = useCurrentProject();
     //const { projectService } = useServices();
     const [selectedPerson, setSelectedPerson] = useState<PersonDto | null>(null);
-    const [newPerson, setNewPerson] = useState<PersonDto | null>(null);
+
+    const isNewPerson = selectedPerson?.id === '';
 
     const handlePersonSelected = (person: PersonDto) => {
-        if (!newPerson) {
+        if (!isNewPerson) {
             setSelectedPerson(person);
         }
     };
 
     const handleAddNewPerson = async () => {
         if (project) {
-            setSelectedPerson(null);
-            setNewPerson(Person.ToDto(new Person()));
+            setSelectedPerson(Person.ToDto(new Person()));
         }
     };
 
     const clearSelectedPerson = () => {
         setSelectedPerson(null);
-        setNewPerson(null);
     };
 
     //const handleAddPerson = async () => {
@@ -67,7 +66,7 @@ const Persons = () => {
                             variant="contained"
                             color="primary"
                             startIcon={<AddIcon />}
-                            disabled={newPerson !== null}
+                            disabled={isNewPerson}
                             onClick={handleAddNewPerson}
                         >
                             Add Person
@@ -103,7 +102,7 @@ const Persons = () => {
                                     backgroundColor: selectedPerson?.id === person.id ? "#ecf1f1" : "#f5f5f5",
                                     mb: 1,
                                     borderRadius: 1,
-                                    cursor: newPerson ? 'default' : 'pointer'
+                                    cursor: isNewPerson ? 'default' : 'pointer'
                                 }}
                                 onClick={() => handlePersonSelected(person)}
                             >
@@ -139,14 +138,6 @@ const Persons = () => {
                             <PersonPropertiesComponent
                                 project={project}
                                 selectedPerson={selectedPerson}
-                                onProjectReRender={projectReRender}
-                                onClearSelectedPerson={clearSelectedPerson}
-                            />
-                        )}
-                        {(newPerson) && (
-                            <PersonPropertiesComponent
-                                project={project}
-                                selectedPerson={newPerson}
                                 onProjectReRender={projectReRender}
                                 onClearSelectedPerson={clearSelectedPerson}
                             />

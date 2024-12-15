@@ -1,7 +1,8 @@
 import { Box, Button, TextField } from "@mui/material";
+import { useState } from "react";
+import { PersonDto } from "../dtos/PersonDto";
 import { useServices } from '../hooks/useServices';
 import { Project } from "../models/Project";
-import { PersonDto } from "../dtos/PersonDto";
 
 interface PersonPropertiesComponentProps {
     project: Project;
@@ -14,12 +15,21 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
     project, selectedPerson, onClearSelectedPerson, onProjectReRender
 }) => {
     const { projectService } = useServices();
+    const [emailError, setEmailError] = useState<string | null>(null);
 
-    const isNewPerson = selectedPerson.id === '';
+    const isNewPerson = selectedPerson?.id === '';
 
     const handleRoleChange = (newRole: string) => {
-        if (project && selectedPerson) {
+        if (project) {
             selectedPerson.role = newRole;
+            onProjectReRender();
+        }
+    };
+
+    const handleEmailChange = (newEmail: string) => {
+        if (project) {
+            selectedPerson.email = newEmail;
+            setEmailError(null);
             onProjectReRender();
         }
     };
@@ -33,8 +43,12 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
     };
 
     const handleAddNewPerson = () => {
+        if (!selectedPerson.email || selectedPerson.email.trim() === '') {
+            setEmailError('Email is required.');
+            return;
+        }
         if (project) {
-            projectService.addPerson(project);
+            projectService.addPerson(project, selectedPerson);
             onClearSelectedPerson();
             onProjectReRender();
         }
@@ -59,11 +73,14 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
 
             <TextField
                 sx={{ mt: 2 }}
-                label="Email"
+                label="Email*"
                 value={selectedPerson.email}
+                onChange={(e) => handleEmailChange(e.target.value)}
                 disabled={!isNewPerson}
                 fullWidth
                 variant="outlined"
+                error={!!emailError}
+                helperText={emailError}
             />
 
             <TextField
@@ -87,7 +104,7 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
             ) : (
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
                         <Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={handleRemovePerson}>
-                            Remove
+                            Remove Person
                         </Button>
                         <Button variant="outlined" color="primary" sx={{ flex: 1 }} onClick={handleClose}>
                             Close
