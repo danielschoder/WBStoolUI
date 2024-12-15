@@ -15,10 +15,16 @@ const DrawerComponent: React.FC<{
     ];
 
     return (
-        <Drawer anchor="left" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+        <Drawer
+            anchor="left"
+            variant="persistent"
+            open={drawerOpen}
+            onClose={() => setDrawerOpen(false)}
+            ModalProps={{ keepMounted: true }}
+        >
             <List>
                 {menuItems.map((item) => (
-                    <ListItem key={item.label} component={NavLink} to={item.path} onClick={() => setDrawerOpen(false)}>
+                    <ListItem key={item.label} component={NavLink} to={item.path}>
                         <ListItemText primary={item.label} />
                     </ListItem>
                 ))}
@@ -28,6 +34,9 @@ const DrawerComponent: React.FC<{
             {/*        }}>*/}
             {/*        <ListItemText primary="Logout" />*/}
             {/*    </ListItem>*/}
+                <ListItem key="Close" onClick={() => setDrawerOpen(false)}>
+                    <ListItemText primary="Close" />
+                </ListItem>
             </List>
         </Drawer>
     );
