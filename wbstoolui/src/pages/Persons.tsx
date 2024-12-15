@@ -27,6 +27,7 @@ const Persons = () => {
     };
 
     const clearSelectedPerson = () => {
+        setSelectedPerson(null);
         setNewPerson(null);
     };
 
@@ -102,7 +103,7 @@ const Persons = () => {
                                     backgroundColor: selectedPerson?.id === person.id ? "#ecf1f1" : "#f5f5f5",
                                     mb: 1,
                                     borderRadius: 1,
-                                    cursor: 'pointer'
+                                    cursor: newPerson ? 'default' : 'pointer'
                                 }}
                                 onClick={() => handlePersonSelected(person)}
                             >
@@ -139,6 +140,7 @@ const Persons = () => {
                                 project={project}
                                 selectedPerson={selectedPerson}
                                 onProjectReRender={projectReRender}
+                                onClearSelectedPerson={clearSelectedPerson}
                             />
                         )}
                         {(newPerson) && (

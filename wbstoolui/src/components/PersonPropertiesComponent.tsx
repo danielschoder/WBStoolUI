@@ -7,13 +7,15 @@ interface PersonPropertiesComponentProps {
     project: Project;
     selectedPerson: PersonDto;
     onProjectReRender: () => void;
-    onClearSelectedPerson?: () => void;
+    onClearSelectedPerson: () => void;
 }
 
 const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
     project, selectedPerson, onClearSelectedPerson, onProjectReRender
 }) => {
     const { projectService } = useServices();
+
+    const isNewPerson = selectedPerson.id === '';
 
     const handleRoleChange = (newRole: string) => {
         if (project && selectedPerson) {
@@ -22,62 +24,29 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
         }
     };
 
-    //const handleEffortChange = (newEffort: string) => {
-    //    if (project && selectedPerson) {
-    //        selectedPerson.effortPlanned = Number(newEffort);
-    //        onProjectReRender();
-    //    }
-    //};
-
-    //const handleExtCostChange = (newExtCost: string) => {
-    //    if (project && selectedPerson) {
-    //        selectedPerson.extCostPlanned = Number(newExtCost);
-    //        onProjectReRender();
-    //    }
-    //};
+    const handleRemovePerson = () => {
+        if (project) {
+            projectService.removePerson(project, selectedPerson.id);
+            onClearSelectedPerson();
+            onProjectReRender();
+        }
+    };
 
     const handleAddNewPerson = () => {
         if (project) {
             projectService.addPerson(project);
-            if (onClearSelectedPerson) {
-                onClearSelectedPerson();
-            }
+            onClearSelectedPerson();
             onProjectReRender();
         }
     };
 
-    const handleCancelAddNewPerson = () => {
+    const handleClose = () => {
         if (project) {
-            if (onClearSelectedPerson) {
-                onClearSelectedPerson();
-            }
+            onClearSelectedPerson();
             onProjectReRender();
         }
     };
 
-    //const handleAddSibling = () => {
-    //    if (project && selectedPerson) {
-    //        projectService.addNextElement(selectedPerson);
-    //        onProjectReRender();
-    //    }
-    //};
-
-    //const handleDelete = () => {
-    //    if (project && selectedPerson) {
-    //        projectService.deleteElement(selectedPerson);
-    //        onProjectReRender();
-    //    }
-    //};
-
-    //const handleStatusChange = (newStatus: number) => {
-    //    if (project && selectedPerson) {
-    //        selectedPerson.status = newStatus;
-    //        onProjectReRender();
-    //    }
-    //};
-
-                {/*disabled={selectedPerson?.elements?.length > 0}*/}
-                {/*onChange={(e) => handleEffortChange(e.target.value)}*/}
     return (
         <Box>
             <TextField
@@ -92,7 +61,7 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
                 sx={{ mt: 2 }}
                 label="Email"
                 value={selectedPerson.email}
-                disabled={true}
+                disabled={!isNewPerson}
                 fullWidth
                 variant="outlined"
             />
@@ -106,43 +75,24 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
                 variant="outlined"
             />
 
-            {/*<FormControl fullWidth sx={{ mt: 2 }}>*/}
-            {/*    <InputLabel id="status-label">Status</InputLabel>*/}
-            {/*    <Select*/}
-            {/*        labelId="status-label"*/}
-            {/*        value={selectedPerson.status}*/}
-            {/*        label="Status"*/}
-            {/*        disabled={selectedPerson?.elements?.length > 0}*/}
-            {/*        onChange={(e) => handleStatusChange(e.target.value as number)}*/}
-            {/*    >*/}
-            {/*        <MenuItem value={0}>Planned</MenuItem>*/}
-            {/*        <MenuItem value={1}>Started</MenuItem>*/}
-            {/*        <MenuItem value={2}>Finished</MenuItem>*/}
-            {/*    </Select>*/}
-            {/*</FormControl>*/}
-
-            {/*<TextField*/}
-            {/*    sx={{ mt: 2 }}*/}
-            {/*    label="External Cost"*/}
-            {/*    type="number"*/}
-            {/*    value={selectedPerson.extCostPlanned}*/}
-            {/*    disabled={selectedPerson?.elements?.length > 0}*/}
-            {/*    onChange={(e) => handleExtCostChange(e.target.value)}*/}
-            {/*    fullWidth*/}
-            {/*    variant="outlined"*/}
-            {/*/>*/}
-            {selectedPerson.id === '' && (
+            {isNewPerson ? (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
-                    <Button variant="outlined" color="primary" sx={{ flex: 1 }} onClick={handleCancelAddNewPerson}>
+                    <Button variant="outlined" color="primary" sx={{ flex: 1 }} onClick={handleClose}>
                         Cancel
                     </Button>
                     <Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={handleAddNewPerson}>
                         Add
                     </Button>
-                    {/*    <Button variant="contained" color="primary" sx={{ flex: 1 }} disabled={!selectedPerson} onClick={handleDelete}>*/}
-                    {/*        Delete*/}
-                    {/*    </Button>*/}
                 </Box>
+            ) : (
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
+                        <Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={handleRemovePerson}>
+                            Remove
+                        </Button>
+                        <Button variant="outlined" color="primary" sx={{ flex: 1 }} onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Box>
             )}
         </Box>
     );
