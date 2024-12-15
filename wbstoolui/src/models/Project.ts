@@ -35,6 +35,7 @@ export class Project {
         return {
             id: project.id,
             name: project.name,
+            persons: project.persons,
             rootElement: rootElement,
             settings: project.settings
         };
