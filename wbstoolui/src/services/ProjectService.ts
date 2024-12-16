@@ -45,10 +45,15 @@ export class ProjectService {
         }
     }
 
-    addPerson(project: Project, person: PersonDto): PersonDto | null {
+    addPerson(project: Project, person: PersonDto): string | null {
         if (project && project.persons) {
+            person.email = person.email.replace(/\s+/g, '').toLowerCase();
+            if (project.persons.some(p => p.email === person.email)) {
+                return "This email is already in the list."
+            }
             person.id = crypto.randomUUID();
             project.persons.push(person);
+            project.persons.sort((a, b) => a.email.localeCompare(b.email));
         }
         return null;
     }

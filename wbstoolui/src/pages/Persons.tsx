@@ -3,13 +3,11 @@ import { Box, Button, Container, List, ListItem, Typography } from '@mui/materia
 import { useState } from 'react';
 import PersonPropertiesComponent from '../components/PersonPropertiesComponent';
 import { useCurrentProject } from '../hooks/useCurrentProject';
-//import { useServices } from '../hooks/useServices';
 import { PersonDto } from '../dtos/PersonDto';
 import { Person } from '../models/Person';
 
 const Persons = () => {
     const { project, setProject } = useCurrentProject();
-    //const { projectService } = useServices();
     const [selectedPerson, setSelectedPerson] = useState<PersonDto | null>(null);
 
     const isNewPerson = selectedPerson?.id === '';
@@ -29,20 +27,6 @@ const Persons = () => {
     const clearSelectedPerson = () => {
         setSelectedPerson(null);
     };
-
-    //const handleAddPerson = async () => {
-    //    if (project) {
-    //        const newPerson = projectService.addPerson(project);
-    //        setSelectedPerson(newPerson);
-    //    }
-    //};
-
-    //const handleRemovePerson = async () => {
-    //    if (project && selectedPerson) {
-    //        projectService.removePerson(project, selectedPerson.id);
-    //        setDeleteDialogOpen(false);
-    //    }
-    //}
 
     const projectReRender = () => {
         if (project) {

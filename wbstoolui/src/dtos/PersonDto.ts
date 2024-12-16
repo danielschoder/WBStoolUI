@@ -3,4 +3,5 @@ export class PersonDto {
     name: string = '';
     email: string = '';
     role: string = '';
+    isProjectAuthor: boolean = false;
 }

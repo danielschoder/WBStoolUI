@@ -4,6 +4,7 @@ import { Project } from '../models/Project';
 import { ProjectService } from '../services/ProjectService';
 import { AuthApiService } from './AuthApiService';
 import { Person } from '../models/Person';
+import { PersonDto } from '../dtos/PersonDto';
 
 export class ProjectApiService {
     constructor(
@@ -40,12 +41,13 @@ export class ProjectApiService {
 
     async updateProject(project: Project): Promise<void> {
         try {
-            await axios.put(`${baseUrlWbstool}/projects/${project.id}`, Project.ToDto(project), {
+            const response = await axios.put(`${baseUrlWbstool}/projects/${project.id}`, Project.ToDto(project), {
                 headers: {
                     ...this.authApiService.getAuthHeaders(),
                     'Content-Type': 'application/json',
-                },
+                }
             });
+            project.persons = response.data as PersonDto[];
         } catch (error) {
             throw new Error('Failed to update project: ' + error);
         }

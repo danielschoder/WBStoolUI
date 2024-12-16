@@ -20,26 +20,20 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
     const isNewPerson = selectedPerson?.id === '';
 
     const handleRoleChange = (newRole: string) => {
-        if (project) {
-            selectedPerson.role = newRole;
-            onProjectReRender();
-        }
+        selectedPerson.role = newRole;
+        onProjectReRender();
     };
 
     const handleEmailChange = (newEmail: string) => {
-        if (project) {
-            selectedPerson.email = newEmail;
-            setEmailError(null);
-            onProjectReRender();
-        }
+        setEmailError(null);
+        selectedPerson.email = newEmail;
+        onProjectReRender();
     };
 
     const handleRemovePerson = () => {
-        if (project) {
-            projectService.removePerson(project, selectedPerson.id);
-            onClearSelectedPerson();
-            onProjectReRender();
-        }
+        projectService.removePerson(project, selectedPerson.id);
+        onClearSelectedPerson();
+        onProjectReRender();
     };
 
     const handleAddNewPerson = () => {
@@ -47,18 +41,18 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
             setEmailError('Email is required.');
             return;
         }
-        if (project) {
-            projectService.addPerson(project, selectedPerson);
-            onClearSelectedPerson();
-            onProjectReRender();
+        const error = projectService.addPerson(project, selectedPerson);
+        if (error) {
+            setEmailError(error);
+            return;
         }
+        onClearSelectedPerson();
+        onProjectReRender();
     };
 
     const handleClose = () => {
-        if (project) {
-            onClearSelectedPerson();
-            onProjectReRender();
-        }
+        onClearSelectedPerson();
+        onProjectReRender();
     };
 
     return (
