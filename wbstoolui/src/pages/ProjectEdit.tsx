@@ -1,25 +1,22 @@
 import ChevronRight from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import SaveIcon from '@mui/icons-material/Save';
-import { Box, Button, Container, IconButton, List, ListItem, Typography } from "@mui/material";
-//import { useEffect, useState } from "react";
+import { Box, Container, IconButton, List, ListItem, Typography } from "@mui/material";
 import { useState } from "react";
-//import { useParams } from "react-router-dom";
-//import Error from '../components/Error';
-//import Loading from "../components/Loading";
 import PropertiesComponent from "../components/PropertiesComponent";
 import { useCurrentProject } from '../hooks/useCurrentProject';
 import { useServices } from '../hooks/useServices';
 import { Element } from "../models/Element";
 import { formatMoney } from '../utils/formatters';
+//import { useEffect, useState } from "react";
+//import Error from '../components/Error';
+//import Loading from "../components/Loading";
 
 const ProjectEdit = () => {
-    //const { projectId } = useParams<{ projectId: string }>();
     const { project, setProject } = useCurrentProject();
     const [selectedElement, setSelectedElement] = useState<Element | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
     //const [error, setError] = useState<string | null>(null);
-    const { projectService, projectApiService } = useServices();
+    const { projectService } = useServices();
 
     //useEffect(() => {
     //    if (!projectId) return;
@@ -63,12 +60,6 @@ const ProjectEdit = () => {
         }
     }
 
-    const saveProject = async () => {
-        if (project) {
-            await projectApiService.updateProject(project);
-        }
-    };
-
     //if (loading) { return <Loading />; }
     //if (error) { return <Error error={error} />; }
     if (project) {
@@ -101,12 +92,6 @@ const ProjectEdit = () => {
                                         Ext. Cost
                                     </Typography>
                                 </Box>
-
-                            {/*    <Box flex={1}>*/}
-                            {/*        <Typography variant="h6" color="text.primary" fontWeight="bold" sx={{ textAlign: 'right' }}>*/}
-                            {/*            Level/Index*/}
-                            {/*        </Typography>*/}
-                            {/*    </Box>*/}
                             </Box>
                         </ListItem>
 
@@ -170,12 +155,6 @@ const ProjectEdit = () => {
                                             {formatMoney(element.extCostPlanned)}
                                         </Typography>
                                     </Box>
-
-                                {/*    <Box flex={1}>*/}
-                                {/*        <Typography variant="body1" color="primary" sx={{ textAlign: 'right' }}>*/}
-                                {/*            {element.level}/{element.index}*/}
-                                {/*        </Typography>*/}
-                                {/*    </Box>*/}
                                 </Box>
                             </ListItem>
                         ))}
@@ -185,20 +164,13 @@ const ProjectEdit = () => {
                 <Box sx={{ borderLeft: '2px solid #ccc', height: 'auto', mr: 2 }} />
 
                 <Box sx={{ width: '400px', position: 'relative', mt: '9px' }}>
-                    <Box sx={{ mb: 2 }}>
-                        <Button variant="contained" color="primary" onClick={saveProject} startIcon={<SaveIcon />} fullWidth>
-                            Save Project
-                        </Button>
-                    </Box>
-                    <Box sx={{ mt: 2 }}>
-                        {selectedElement && (
-                            <PropertiesComponent
-                                project={project}
-                                selectedElement={selectedElement}
-                                onProjectReRender={projectReRender}
-                            />
-                        )}
-                    </Box>
+                    {selectedElement && (
+                        <PropertiesComponent
+                            project={project}
+                            selectedElement={selectedElement}
+                            onProjectReRender={projectReRender}
+                        />
+                    )}
                 </Box>
             </Box>
         </Container>;

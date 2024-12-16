@@ -1,5 +1,7 @@
+import ListIcon from '@mui/icons-material/List';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
+import SaveIcon from '@mui/icons-material/Save';
 import { AppBar, Box, Button, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,10 +19,16 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
 }) => {
     const navigate = useNavigate();
     const { project } = useCurrentProject();
-    const { authApiService } = useServices();
+    const { projectApiService, authApiService } = useServices();
     const [isAuthenticated, setAuthenticated] = useState(authApiService.isAuthenticated());
     const [isLoginDialogOpen, setOpenLoginDialog] = useState(false);
     const [isRegisterDialogOpen, setOpenRegisterDialog] = useState(false);
+
+    const saveProject = async () => {
+        if (project) {
+            await projectApiService.updateProject(project);
+        }
+    };
 
     return (
         <AppBar position="static">
@@ -39,9 +47,16 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
                 <Box sx={{ ml: 'auto' }}>
                     {isAuthenticated ? (
                         <>
-                            <Button color="inherit" onClick={() => navigate('/projects')}>
-                                My Projects
-                            </Button>
+                            <Tooltip title="Save project" arrow>
+                                <IconButton color="inherit" onClick={saveProject}>
+                                    <SaveIcon />
+                                </IconButton>
+                            </Tooltip>
+                            <Tooltip title="My projects" arrow>
+                                <IconButton color="inherit" onClick={() => navigate('/projects')}>
+                                    <ListIcon />
+                                </IconButton>
+                            </Tooltip>
                             <Tooltip title={authApiService.getUserEmail()} arrow>
                                 <IconButton color="inherit">
                                     <PersonIcon />
