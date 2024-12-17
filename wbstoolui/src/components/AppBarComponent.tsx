@@ -9,6 +9,7 @@ import { useCurrentProject } from '../hooks/useCurrentProject';
 import { useServices } from '../hooks/useServices';
 import LoginDialog from './LoginDialog';
 import RegisterDialog from './RegisterDialog';
+import { Project } from '../models/Project';
 
 interface AppBarComponentProps {
     setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,7 +19,7 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
     setDrawerOpen
 }) => {
     const navigate = useNavigate();
-    const { project } = useCurrentProject();
+    const { project, setProject } = useCurrentProject();
     const { projectApiService, authApiService } = useServices();
     const [isAuthenticated, setAuthenticated] = useState(authApiService.isAuthenticated());
     const [isLoginDialogOpen, setOpenLoginDialog] = useState(false);
@@ -27,6 +28,7 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
     const saveProject = async () => {
         if (project) {
             await projectApiService.updateProject(project);
+            setProject(Project.fromPlainObject({ ...project }));
         }
     };
 
@@ -47,11 +49,13 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
                 <Box sx={{ ml: 'auto' }}>
                     {isAuthenticated ? (
                         <>
-                            <Tooltip title="Save project" arrow>
-                                <IconButton color="inherit" onClick={saveProject}>
-                                    <SaveIcon />
-                                </IconButton>
-                            </Tooltip>
+                            {project?.areChangesPending && (
+                                <Tooltip title="Save project" arrow>
+                                    <IconButton color="inherit" onClick={saveProject}>
+                                        <SaveIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
                             <Tooltip title="My projects" arrow>
                                 <IconButton color="inherit" onClick={() => navigate('/projects')}>
                                     <ListIcon />

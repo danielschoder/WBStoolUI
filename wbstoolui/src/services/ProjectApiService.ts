@@ -1,14 +1,11 @@
 import axios from 'axios';
 import { baseUrlWbstool } from '../constants';
 import { Project } from '../models/Project';
-import { ProjectService } from '../services/ProjectService';
 import { AuthApiService } from './AuthApiService';
-import { Person } from '../models/Person';
 import { PersonDto } from '../dtos/PersonDto';
 
 export class ProjectApiService {
     constructor(
-        private projectService: ProjectService,
         private authApiService: AuthApiService
     ) { }
 
@@ -20,7 +17,7 @@ export class ProjectApiService {
                     'Content-Type': 'application/json',
                 },
             });
-            return response.data as Project;
+            return Project.fromPlainObject(response.data as Project);
         } catch (error) {
             throw new Error('Failed to create project: ' + error);
         }
@@ -31,9 +28,7 @@ export class ProjectApiService {
             const response = await axios.get(`${baseUrlWbstool}/projects/${projectId}`, {
                 headers: this.authApiService.getAuthHeaders(),
             });
-            const project = response.data as Project;
-            this.projectService.initializeProject(project);
-            return project;
+            return Project.fromPlainObject(response.data as Project);
         } catch (error) {
             throw new Error('Failed to fetch project: ' + error);
         }
@@ -41,13 +36,14 @@ export class ProjectApiService {
 
     async updateProject(project: Project): Promise<void> {
         try {
-            const response = await axios.put(`${baseUrlWbstool}/projects/${project.id}`, Project.ToDto(project), {
+            const response = await axios.put(`${baseUrlWbstool}/projects/${project.id}`, project.toDto(), {
                 headers: {
                     ...this.authApiService.getAuthHeaders(),
                     'Content-Type': 'application/json',
                 }
             });
             project.persons = response.data as PersonDto[];
+            project.areChangesPending = false;
         } catch (error) {
             throw new Error('Failed to update project: ' + error);
         }
@@ -60,30 +56,6 @@ export class ProjectApiService {
             });
         } catch (error) {
             throw new Error('Failed to delete project: ' + error);
-        }
-    }
-
-    async addPerson(projectId: string): Promise<Person> {
-        try {
-            const response = await axios.post(`${baseUrlWbstool}/projects/${projectId}/persons`, null, {
-                headers: {
-                    ...this.authApiService.getAuthHeaders(),
-                    'Content-Type': 'application/json',
-                },
-            });
-            return response.data as Person;
-        } catch (error) {
-            throw new Error('Failed to add person: ' + error);
-        }
-    }
-
-    async removePerson(projectId: string, personId: string): Promise<void> {
-        try {
-            await axios.delete(`${baseUrlWbstool}/projects/${projectId}/persons/${personId}`, {
-                headers: this.authApiService.getAuthHeaders(),
-            });
-        } catch (error) {
-            throw new Error('Failed to delete person: ' + error);
         }
     }
 }

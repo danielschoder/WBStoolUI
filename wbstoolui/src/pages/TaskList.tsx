@@ -2,16 +2,17 @@ import ChevronRight from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { Box, Container, IconButton, List, ListItem, Typography } from "@mui/material";
 import { useState } from "react";
-import PropertiesComponent from "../components/PropertiesComponent";
+import ElementPropertiesComponent from "../components/ElementPropertiesComponent";
 import { useCurrentProject } from '../hooks/useCurrentProject';
 import { useServices } from '../hooks/useServices';
 import { Element } from "../models/Element";
 import { formatMoney } from '../utils/formatters';
+import { Project } from '../models/Project';
 //import { useEffect, useState } from "react";
 //import Error from '../components/Error';
 //import Loading from "../components/Loading";
 
-const ProjectEdit = () => {
+const TaskList = () => {
     const { project, setProject } = useCurrentProject();
     const [selectedElement, setSelectedElement] = useState<Element | null>(null);
     //const [loading, setLoading] = useState<boolean>(true);
@@ -51,12 +52,12 @@ const ProjectEdit = () => {
 
     const projectReRender = () => {
         if (project) {
-            projectService.populateElements(project);
+            //project.populateElements();
             if (projectService.newSelectedElement) {
                 setSelectedElement(projectService.newSelectedElement);
                 projectService.newSelectedElement = null;
             }
-            setProject({ ...project });
+            setProject(Project.fromPlainObject({ ...project }));
         }
     }
 
@@ -130,7 +131,7 @@ const ProjectEdit = () => {
                                                 fontWeight: element.elements && element.elements.length > 0 ? 'bold' : 'normal',
                                             }}
                                         >
-                                            {projectService.getItemLabel(element)}
+                                            {Element.getItemLabel(element)}
                                         </Typography>
                                     </Box>
 
@@ -165,7 +166,7 @@ const ProjectEdit = () => {
 
                 <Box sx={{ width: '400px', position: 'relative', mt: '9px' }}>
                     {selectedElement && (
-                        <PropertiesComponent
+                        <ElementPropertiesComponent
                             project={project}
                             selectedElement={selectedElement}
                             onProjectReRender={projectReRender}
@@ -177,4 +178,4 @@ const ProjectEdit = () => {
     }
 };
 
-export default ProjectEdit;
+export default TaskList;

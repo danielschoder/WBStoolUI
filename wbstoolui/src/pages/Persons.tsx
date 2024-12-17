@@ -5,6 +5,7 @@ import PersonPropertiesComponent from '../components/PersonPropertiesComponent';
 import { useCurrentProject } from '../hooks/useCurrentProject';
 import { PersonDto } from '../dtos/PersonDto';
 import { Person } from '../models/Person';
+import { Project } from '../models/Project';
 
 const Persons = () => {
     const { project, setProject } = useCurrentProject();
@@ -30,7 +31,7 @@ const Persons = () => {
 
     const projectReRender = () => {
         if (project) {
-            setProject({ ...project });
+            setProject(Project.fromPlainObject({ ...project }));
         }
     }
 

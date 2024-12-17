@@ -1,24 +1,7 @@
-import { PersonDto } from '../dtos/PersonDto';
 import { Element } from '../models/Element';
-import { Person } from '../models/Person';
-import { Project } from '../models/Project';
 
 export class ProjectService {
     public newSelectedElement: Element | null = null;
-
-    initializeProject(project: Project): void {
-        this.initializeProjectSettings(project);
-        this.populateElements(project);
-    }
-
-    populateElements(project: Project) {
-        project.elements = [];
-        this.populateTreeAndList(project, project.rootElement, false);
-    }
-
-    getItemLabel(element: Element) {
-        return `${element.number} ${element.label}`;
-    }
 
     addSubElement(element: Element) {
         if (!element.elements) {
@@ -43,56 +26,5 @@ export class ProjectService {
             this.newSelectedElement = parent.elements.length == 0 ? parent
                 : parent.elements[element.index - (element.index >= parent.elements.length ? 1 : 0)];
         }
-    }
-
-    addPerson(project: Project, person: PersonDto): string | null {
-        if (project && project.persons) {
-            person.email = person.email.replace(/\s+/g, '').toLowerCase();
-            if (project.persons.some(p => p.email === person.email)) {
-                return "This email is already in the list."
-            }
-            person.id = crypto.randomUUID();
-            project.persons.push(person);
-            project.persons.sort((a, b) => a.email.localeCompare(b.email));
-        }
-        return null;
-    }
-
-    removePerson(project: Project, personId: string) {
-        if (project && project.persons) {
-            project.persons = project.persons.filter(person => person.id !== personId);
-        }
-    }
-
-    private populateTreeAndList(project: Project, element: Element, parentIsCollapsed: boolean): void {
-        if (!parentIsCollapsed) {
-            project.elements.push(element);
-        }
-        if (element.elements && element.elements.length > 0) {
-            Element.initNumbers(element);
-            let i = 0;
-            let numberOfFinished = 0;
-            for (const child of element.elements) {
-                Element.setTreeProperties(child, element, i);
-                this.populateTreeAndList(project, child, parentIsCollapsed || element.isCollapsed);
-                i++;
-                Element.initEmptyNumbers(child);
-                Element.accumulateNumbers(element, child);
-                if (child.status > 0) {
-                    element.status = 1;
-                }
-                if (child.status == 2) {
-                    numberOfFinished++;
-                }
-            }
-            if (numberOfFinished == element.elements.length) {
-                element.status = 2;
-            }
-        }
-    }
-
-    private initializeProjectSettings(project: Project): void {
-        project.rootElement.number = "1";
-        project.rootElement.level = 0;
     }
 }

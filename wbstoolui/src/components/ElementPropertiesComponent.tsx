@@ -3,64 +3,55 @@ import { useServices } from '../hooks/useServices';
 import { Element } from "../models/Element";
 import { Project } from "../models/Project";
 
-interface PropertiesComponentProps {
+interface ElementPropertiesComponentProps {
     project: Project;
     selectedElement: Element;
     onProjectReRender: () => void;
 }
 
-const PropertiesComponent: React.FC<PropertiesComponentProps> = ({
+const ElementPropertiesComponent: React.FC<ElementPropertiesComponentProps> = ({
     project, selectedElement, onProjectReRender
 }) => {
     const { projectService } = useServices();
 
+    const onProjectChanged = () => {
+        project.areChangesPending = true;
+        onProjectReRender();
+    }
+
     const handleLabelChange = (newLabel: string) => {
-        if (project && selectedElement) {
-            selectedElement.label = newLabel;
-            onProjectReRender();
-        }
-    };
-
-    const handleEffortChange = (newEffort: string) => {
-        if (project && selectedElement) {
-            selectedElement.effortPlanned = Number(newEffort);
-            onProjectReRender();
-        }
-    };
-
-    const handleExtCostChange = (newExtCost: string) => {
-        if (project && selectedElement) {
-            selectedElement.extCostPlanned = Number(newExtCost);
-            onProjectReRender();
-        }
-    };
-
-    const handleAddChild = () => {
-        if (project && selectedElement) {
-            projectService.addSubElement(selectedElement);
-            onProjectReRender();
-        }
-    };
-
-    const handleAddSibling = () => {
-        if (project && selectedElement) {
-            projectService.addNextElement(selectedElement);
-            onProjectReRender();
-        }
-    };
-
-    const handleDelete = () => {
-        if (project && selectedElement) {
-            projectService.deleteElement(selectedElement);
-            onProjectReRender();
-        }
+        selectedElement.label = newLabel;
+        onProjectChanged();
     };
 
     const handleStatusChange = (newStatus: number) => {
-        if (project && selectedElement) {
-            selectedElement.status = newStatus;
-            onProjectReRender();
-        }
+        selectedElement.status = newStatus;
+        onProjectChanged();
+    };
+
+    const handleEffortChange = (newEffort: string) => {
+        selectedElement.effortPlanned = Number(newEffort);
+        onProjectChanged();
+    };
+
+    const handleExtCostChange = (newExtCost: string) => {
+        selectedElement.extCostPlanned = Number(newExtCost);
+        onProjectChanged();
+    };
+
+    const handleAddChild = () => {
+        projectService.addSubElement(selectedElement);
+        onProjectChanged();
+    };
+
+    const handleAddSibling = () => {
+        projectService.addNextElement(selectedElement);
+        onProjectChanged();
+    };
+
+    const handleDelete = () => {
+        projectService.deleteElement(selectedElement);
+        onProjectChanged();
     };
 
     return (
@@ -125,4 +116,4 @@ const PropertiesComponent: React.FC<PropertiesComponentProps> = ({
     );
 };
 
-export default PropertiesComponent;
+export default ElementPropertiesComponent;

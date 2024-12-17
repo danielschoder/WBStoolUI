@@ -1,7 +1,6 @@
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { PersonDto } from "../dtos/PersonDto";
-import { useServices } from '../hooks/useServices';
 import { Project } from "../models/Project";
 
 interface PersonPropertiesComponentProps {
@@ -14,7 +13,6 @@ interface PersonPropertiesComponentProps {
 const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
     project, selectedPerson, onClearSelectedPerson, onProjectReRender
 }) => {
-    const { projectService } = useServices();
     const [emailError, setEmailError] = useState<string | null>(null);
 
     const isNewPerson = selectedPerson?.id === '';
@@ -31,7 +29,7 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
     };
 
     const handleRemovePerson = () => {
-        projectService.removePerson(project, selectedPerson.id);
+        project.removePerson(selectedPerson.id);
         onClearSelectedPerson();
         onProjectReRender();
     };
@@ -41,7 +39,7 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
             setEmailError('Email is required.');
             return;
         }
-        const error = projectService.addPerson(project, selectedPerson);
+        const error = project.addPerson(selectedPerson);
         if (error) {
             setEmailError(error);
             return;

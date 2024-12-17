@@ -27,6 +27,10 @@ export class Element {
         this.elements = [];
     }
 
+    static getItemLabel(element: Element) {
+        return `${element.number} ${element.label}`;
+    }
+
     static initNumbers(element: Element): void {
         element.status = 0;
         element.effortPlanned = 0;

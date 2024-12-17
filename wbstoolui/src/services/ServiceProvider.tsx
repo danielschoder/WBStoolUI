@@ -8,7 +8,7 @@ export const ServiceProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const services = useMemo(() => {
         const authApiService = new AuthApiService();
         const projectService = new ProjectService();
-        const projectApiService = new ProjectApiService(projectService, authApiService);
+        const projectApiService = new ProjectApiService(authApiService);
 
         return {
             authApiService,
