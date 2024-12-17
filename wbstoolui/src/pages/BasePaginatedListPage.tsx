@@ -1,7 +1,5 @@
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, Container, IconButton, Pagination, Typography } from '@mui/material';
+import { Box, Container, Pagination, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Error from '../components/Error';
 import Loading from '../components/Loading';
 import { baseUrlWbstool } from '../constants';
@@ -11,11 +9,11 @@ interface BasePaginatedListPageProps<T> {
     title: string;
     apiRoute: string;
     itemsName: string;
+    action?: React.ReactNode;
     renderList: (items: T[], refreshData: () => void) => React.ReactNode;
 }
 
-function BasePaginatedListPage<T>({ title, apiRoute, itemsName, renderList }: BasePaginatedListPageProps<T>) {
-    const navigate = useNavigate();
+function BasePaginatedListPage<T>({ title, apiRoute, itemsName, action, renderList }: BasePaginatedListPageProps<T>) {
     const routeKey = `page_${apiRoute.slice(1)}`;
     const [pageNumber, setPageNumber] = useState<number>(() => {
         const storedPage = localStorage.getItem(routeKey);
@@ -38,13 +36,11 @@ function BasePaginatedListPage<T>({ title, apiRoute, itemsName, renderList }: Ba
 
     return (
         <Container sx={{ mb: 4 }}>
-            <Box display="flex" alignItems="center" mb={2} mt={2}>
-                <IconButton onClick={() => navigate('/')} color="primary" style={{ marginRight: '16px' }}>
-                    <ArrowBackIcon fontSize="large" />
-                </IconButton>
+            <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} mt={2}>
                 <Typography variant="h2">
                     {title}
                 </Typography>
+                {action && <Box>{action}</Box>}
             </Box>
 
             {totalPages > 1 && (

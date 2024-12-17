@@ -1,26 +1,23 @@
-//import { useEffect, useState } from 'react';
 import { useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import AppBarComponent from './components/AppBarComponent';
 import DrawerComponent from './components/DrawerComponent';
-//import { useServices } from './hooks/useServices';
-import TaskList from './pages/TaskList';
-import Projects from './pages/Projects';
 import Persons from './pages/Persons';
+import Projects from './pages/Projects';
+import TaskList from './pages/TaskList';
 import { CurrentProjectProvider } from './services/CurrentProjectProvider';
 import { ServiceProvider } from './services/ServiceProvider';
+import { BeforeUnloadListener } from './components/BeforeUnloadListener';
+import LogVisitor from './components/LogVisitor';
 
 const App: React.FC = () => {
-    //const { authApiService } = useServices();
     const [drawerOpen, setDrawerOpen] = useState(false);
-
-    //useEffect(() => {
-    //    authApiService.logVisitor();
-    //}, [authApiService]);
 
     return (
         <ServiceProvider>
             <CurrentProjectProvider>
+                <LogVisitor />
+                <BeforeUnloadListener />
                 <Router>
                     <AppBarComponent
                         setDrawerOpen={setDrawerOpen}

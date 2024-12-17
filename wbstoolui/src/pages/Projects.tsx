@@ -40,6 +40,16 @@ function Projects() {
             title="My Projects"
             apiRoute="/projects"
             itemsName="projects"
+            action={
+                <Button
+                    variant="contained"
+                    color="primary"
+                    startIcon={<AddIcon />}
+                    onClick={handleAddProject}
+                >
+                    Create Project
+                </Button>
+            }
             renderList={(projects, refreshData) => {
                 const confirmDeleteProject = async () => {
                     if (selectedProject) {
@@ -51,17 +61,6 @@ function Projects() {
 
                 return (
                     <>
-                        <Box display="flex" justifyContent="flex-end" mb={2}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                startIcon={<AddIcon />}
-                                onClick={handleAddProject}
-                            >
-                                Create Project
-                            </Button>
-                        </Box>
-
                         <List>
                             <ListItem sx={{ backgroundColor: "#e0e0e0", mb: 1, borderRadius: 1 }}>
                                 <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" px={2}>
