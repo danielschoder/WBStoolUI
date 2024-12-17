@@ -1,22 +1,25 @@
-import ListIcon from '@mui/icons-material/List';
-import MenuIcon from '@mui/icons-material/Menu';
-import PersonIcon from '@mui/icons-material/Person';
-import SaveIcon from '@mui/icons-material/Save';
+import ListIcon from '@mui/icons-material/ListOutlined';
+import MenuIcon from '@mui/icons-material/MenuOutlined';
+import PersonIcon from '@mui/icons-material/PersonOutlined';
+import SaveIcon from '@mui/icons-material/SaveOutlined';
 import { AppBar, Box, Button, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { drawerWidth } from '../constants';
 import { useCurrentProject } from '../hooks/useCurrentProject';
 import { useServices } from '../hooks/useServices';
+import { Project } from '../models/Project';
 import LoginDialog from './LoginDialog';
 import RegisterDialog from './RegisterDialog';
-import { Project } from '../models/Project';
 
 interface AppBarComponentProps {
     setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    drawerOpen: boolean;
 }
 
 const AppBarComponent: React.FC<AppBarComponentProps> = ({
-    setDrawerOpen
+    setDrawerOpen,
+    drawerOpen
 }) => {
     const navigate = useNavigate();
     const { project, setProject } = useCurrentProject();
@@ -33,16 +36,26 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
     };
 
     return (
-        <AppBar position="static">
+        <AppBar
+            position="fixed"
+            sx={{
+                transition: 'margin 0.3s',
+                marginLeft: drawerOpen ? drawerWidth : 0,
+                width: drawerOpen ? `calc(100% - ${drawerWidth}px)` : '100%',
+            }}
+        >
             <Toolbar>
-                <IconButton
-                    edge="start"
-                    color="inherit"
-                    aria-label="menu"
-                    onClick={() => setDrawerOpen(true)}
-                >
-                    <MenuIcon />
-                </IconButton>
+                {!drawerOpen && (
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={() => setDrawerOpen(true)}
+                        sx={{ mr: 2 }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                )}
                 <Typography variant="h6" component="div">
                     WBStool{project ? ` - ${project.name}` : ``}
                 </Typography>

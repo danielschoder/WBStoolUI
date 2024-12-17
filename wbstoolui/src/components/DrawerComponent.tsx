@@ -1,44 +1,71 @@
-import { Drawer, List, ListItem, ListItemText } from '@mui/material';
-import React from 'react';
+import ListIcon from '@mui/icons-material/ListOutlined';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeftOutlined';
+import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import { NavLink } from 'react-router-dom';
-//import { useCurrentProject } from '../hooks/useCurrentProject';
+import { colourGrey, drawerWidth } from '../constants';
 
-const DrawerComponent: React.FC<{
+interface DrawerComponentProps {
     drawerOpen: boolean;
     setDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}> = ({ drawerOpen, setDrawerOpen }) => {
-    //const { project } = useCurrentProject();
+}
+
+const DrawerComponent: React.FC<DrawerComponentProps> = ({ drawerOpen, setDrawerOpen }) => {
     const menuItems = [
         { label: 'Task List', path: '/tasklist' },
-        { label: 'Persons & Roles', path: '/persons' },
-        { label: 'My Projects', path: '/projects' }
+        { label: 'Persons & Roles', path: '/persons' }
     ];
 
+    const handleDrawerClose = () => {
+        setDrawerOpen(false);
+    };
+
     return (
-        <Drawer
-            anchor="left"
-            variant="persistent"
-            open={drawerOpen}
-            onClose={() => setDrawerOpen(false)}
-            ModalProps={{ keepMounted: true }}
-        >
-            <List>
-                {menuItems.map((item) => (
-                    <ListItem key={item.label} component={NavLink} to={item.path}>
-                        <ListItemText primary={item.label} />
+        <Box sx={{ display: 'flex' }}>
+            <Drawer
+                sx={{
+                    width: drawerOpen ? drawerWidth : 0,
+                    flexShrink: 0,
+                    transition: 'width 0.3s ease',
+                    '& .MuiDrawer-paper': {
+                        width: drawerOpen ? drawerWidth : 0,
+                        boxSizing: 'border-box',
+                        transition: 'width 0.3s ease',
+                    },
+                }}
+                variant="persistent"
+                anchor="left"
+                open={drawerOpen}
+            >
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', p: '12px' }}>
+                    <IconButton onClick={handleDrawerClose}>
+                        <ChevronLeftIcon />
+                    </IconButton>
+                </Box>
+                <Divider />
+                <List>
+                    {menuItems.map((item) => (
+                        <ListItem key={item.label} component={NavLink} to={item.path}>
+                            <ListItemText
+                                sx={{ color: colourGrey }}
+                                primary={item.label}
+                            />
+                        </ListItem>
+                    ))}
+                </List>
+                <Divider />
+                <List>
+                    <ListItem key='My Projects' component={NavLink} to='/projects'>
+                        <Box sx={{ display: 'flex', alignItems: 'center', color: colourGrey }}>
+                            <ListIcon sx={{ mr: 1, color: 'inherit' }} />
+                            <ListItemText
+                                sx={{ color: 'inherit' }}
+                                primary='My Projects'
+                            />
+                        </Box>
                     </ListItem>
-                ))}
-            {/*    <ListItem key="Logout" component="div" onClick={() => {*/}
-            {/*            handleLogout();*/}
-            {/*            setDrawerOpen(false);*/}
-            {/*        }}>*/}
-            {/*        <ListItemText primary="Logout" />*/}
-            {/*    </ListItem>*/}
-                <ListItem key="Close" onClick={() => setDrawerOpen(false)}>
-                    <ListItemText primary="Close" />
-                </ListItem>
-            </List>
-        </Drawer>
+                </List>
+            </Drawer>
+        </Box>
     );
 };
 

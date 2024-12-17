@@ -162,7 +162,7 @@ const TaskList = () => {
                     </List>
                 </Box>
 
-                <Box sx={{ borderLeft: '2px solid #ccc', height: 'auto', mr: 2 }} />
+                <Box sx={{ borderLeft: '1px solid #ccc', height: 'auto', mr: 2 }} />
 
                 <Box sx={{ width: '400px', position: 'relative', mt: '9px' }}>
                     {selectedElement && (

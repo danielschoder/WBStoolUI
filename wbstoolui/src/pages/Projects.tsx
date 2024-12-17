@@ -1,5 +1,5 @@
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/AddOutlined';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, IconButton, List, ListItem, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
