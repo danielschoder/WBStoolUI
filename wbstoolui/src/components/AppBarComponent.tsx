@@ -2,7 +2,7 @@ import ListIcon from '@mui/icons-material/ListOutlined';
 import MenuIcon from '@mui/icons-material/MenuOutlined';
 import PersonIcon from '@mui/icons-material/PersonOutlined';
 import SaveIcon from '@mui/icons-material/SaveOutlined';
-import { AppBar, Box, Button, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, Button, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { drawerWidth } from '../constants';
@@ -27,6 +27,21 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
     const [isAuthenticated, setAuthenticated] = useState(authApiService.isAuthenticated());
     const [isLoginDialogOpen, setOpenLoginDialog] = useState(false);
     const [isRegisterDialogOpen, setOpenRegisterDialog] = useState(false);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        authApiService.logout();
+        setAuthenticated(false);
+        handleMenuClose();
+    };
 
     const saveProject = async () => {
         if (project) {
@@ -75,10 +90,26 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
                                 </IconButton>
                             </Tooltip>
                             <Tooltip title={authApiService.getUserEmail()} arrow>
-                                <IconButton color="inherit">
+                                <IconButton color="inherit" onClick={handleMenuOpen}>
                                     <PersonIcon />
                                 </IconButton>
                             </Tooltip>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleMenuClose}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                            >
+                                <MenuItem onClick={() => navigate('/account')}>My Account</MenuItem>
+                                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+                            </Menu>
                         </>
                     ) : (
                         <>
