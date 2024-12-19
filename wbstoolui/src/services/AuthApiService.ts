@@ -81,6 +81,11 @@ export class AuthApiService {
         return decoded?.sub || null;
     }
 
+    getUserName(): string | null {
+        //const decoded = this.getDecodedJwt();
+        return '"My Name"';
+    }
+
     getUserEmail(): string | null {
         const decoded = this.getDecodedJwt();
         return decoded?.email || null;

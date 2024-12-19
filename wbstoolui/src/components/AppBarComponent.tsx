@@ -43,6 +43,11 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
         handleMenuClose();
     };
 
+    const handleMyAccount = () => {
+        handleMenuClose();
+        navigate('/account');
+    };
+
     const saveProject = async () => {
         if (project) {
             await projectApiService.updateProject(project);
@@ -107,7 +112,7 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
                                     horizontal: 'right',
                                 }}
                             >
-                                <MenuItem onClick={() => navigate('/account')}>My Account</MenuItem>
+                                <MenuItem onClick={handleMyAccount}>My Account</MenuItem>
                                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
                             </Menu>
                         </>

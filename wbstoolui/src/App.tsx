@@ -5,11 +5,13 @@ import AppBarComponent from './components/AppBarComponent';
 import { BeforeUnloadListener } from './components/BeforeUnloadListener';
 import DrawerComponent from './components/DrawerComponent';
 import LogVisitor from './components/LogVisitor';
+import Account from './pages/Account';
 import Persons from './pages/Persons';
 import Projects from './pages/Projects';
 import TaskList from './pages/TaskList';
 import { CurrentProjectProvider } from './services/CurrentProjectProvider';
 import { ServiceProvider } from './services/ServiceProvider';
+import ProjectSettings from './pages/ProjectSettings';
 
 const App: React.FC = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -40,9 +42,11 @@ const App: React.FC = () => {
                         >
                             <Routes>
                                 <Route path="/" element={<Navigate to="/projects" replace />} />
+                                <Route path="/account" element={<Account />} />
+                                <Route path="/project" element={<ProjectSettings />} />
                                 <Route path="/projects" element={<Projects />} />
-                                <Route path="/tasklist" element={<TaskList />} />
                                 <Route path="/persons" element={<Persons />} />
+                                <Route path="/tasklist" element={<TaskList />} />
                             </Routes>
                         </Box>
                     </Box>

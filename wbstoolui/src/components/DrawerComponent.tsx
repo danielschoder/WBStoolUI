@@ -1,5 +1,6 @@
-import ListIcon from '@mui/icons-material/ListOutlined';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeftOutlined';
+import ListIcon from '@mui/icons-material/ListOutlined';
+import SettingsIcon from '@mui/icons-material/SettingsOutlined';
 import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import { NavLink } from 'react-router-dom';
 import { colourGrey, drawerWidth } from '../constants';
@@ -51,10 +52,17 @@ const DrawerComponent: React.FC<DrawerComponentProps> = ({ drawerOpen, setDrawer
                             />
                         </ListItem>
                     ))}
-                </List>
-                <Divider />
-                <List>
-                    <ListItem key='My Projects' component={NavLink} to='/projects'>
+                    <ListItem key='ProjectSettings' component={NavLink} to='/project'>
+                        <Box sx={{ display: 'flex', alignItems: 'center', color: colourGrey }}>
+                            <SettingsIcon sx={{ mr: 1, color: 'inherit' }} />
+                            <ListItemText
+                                sx={{ color: 'inherit' }}
+                                primary='Settings'
+                            />
+                        </Box>
+                    </ListItem>
+                    <Divider sx={{ mt: 1, mb: 1 }} />
+                    <ListItem key='MyProjects' component={NavLink} to='/projects'>
                         <Box sx={{ display: 'flex', alignItems: 'center', color: colourGrey }}>
                             <ListIcon sx={{ mr: 1, color: 'inherit' }} />
                             <ListItemText

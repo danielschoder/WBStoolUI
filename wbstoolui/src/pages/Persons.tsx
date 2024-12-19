@@ -44,7 +44,7 @@ const Persons = () => {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
                 <Box sx={{ flex: 1, mr: 2 }}>
                     <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} mt={2}>
-                        <Typography variant="h2">
+                        <Typography variant="h4">
                             Persons & Roles
                         </Typography>
                         <Button

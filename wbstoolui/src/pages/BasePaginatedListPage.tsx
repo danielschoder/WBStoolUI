@@ -37,7 +37,7 @@ function BasePaginatedListPage<T>({ title, apiRoute, itemsName, action, renderLi
     return (
         <Container sx={{ mb: 4 }}>
             <Box display="flex" alignItems="center" justifyContent="space-between" mb={2} mt={2}>
-                <Typography variant="h2">
+                <Typography variant="h4">
                     {title}
                 </Typography>
                 {action && <Box>{action}</Box>}
