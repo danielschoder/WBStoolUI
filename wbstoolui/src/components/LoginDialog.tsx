@@ -22,9 +22,9 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose }) => {
     };
 
     const handleLoginSubmit = async () => {
-        const authResponse = await authApiService.login(loginForm);
-        if (authResponse.errorMessage) {
-            setErrorMessage(authResponse.errorMessage);
+        const error = await authApiService.login(loginForm);
+        if (error) {
+            setErrorMessage(error);
         } else {
             setLoginForm(new LoginDto());
             setErrorMessage(''); 

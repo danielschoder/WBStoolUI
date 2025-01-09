@@ -1,29 +1,29 @@
 import axios from 'axios';
-import { JwtPayload, jwtDecode } from 'jwt-decode';
 import { baseUrlAuth } from '../constants';
 import { AuthResponseDto } from '../dtos/AuthResponseDto';
 import { LoginDto } from '../dtos/LoginDto';
 import { RegisterDto } from '../dtos/RegisterDto';
+import { UserDto } from '../dtos/UserDto';
 
-interface CustomJwtPayload extends JwtPayload {
-    sub?: string;
-    email?: string;
-}
+const userIdKey: string = 'userId';
+const userEmailKey: string = 'userEmail';
+const userJwtKey: string = 'userJwt';
 
 export class AuthApiService {
+
     async logVisitor(): Promise<void> {
         (async () => {
             try {
-                await axios.post(`${baseUrlAuth}/api/visitors`, {});
+                await axios.post(`${baseUrlAuth}/visitors`, {});
             } catch (error) {
                 console.error('Error posting visitor data', error);
             }
         })();
     }
 
-    async login(loginDto: LoginDto): Promise<AuthResponseDto> {
+    async login(loginDto: LoginDto): Promise<string | null> {
         try {
-            const response = await fetch(`${baseUrlAuth}/api/login`, {
+            const response = await fetch(`${baseUrlAuth}/users/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -33,15 +33,18 @@ export class AuthApiService {
 
             if (response.ok) {
                 const authResponseDto: AuthResponseDto = await response.json();
-                localStorage.setItem('jwt', authResponseDto.jwt);
-                return authResponseDto;
+                if (authResponseDto.errorMessage) {
+                    return authResponseDto.errorMessage;
+                }
+                this.saveUserToLocalStorage(authResponseDto);
+                return null;
             } else if (response.status === 401) {
-                return new AuthResponseDto('', 'Email/password invalid.');
+                return 'Email/password invalid.';
             } else {
-                return new AuthResponseDto('', response.statusText);
+                return response.statusText;
             }
         } catch (error) {
-            return new AuthResponseDto('', error instanceof Error ? error.message : String(error));
+            return error instanceof Error ? error.message : String(error);
         }
     }
 
@@ -57,59 +60,43 @@ export class AuthApiService {
 
             if (response.ok) {
                 const authResponseDto: AuthResponseDto = await response.json();
-                localStorage.setItem('jwt', authResponseDto.jwt);
+                this.saveUserToLocalStorage(authResponseDto);
                 return authResponseDto;
             } else {
-                return new AuthResponseDto('', response.statusText);
+                return new AuthResponseDto(new UserDto(), response.statusText);
             }
         } catch (error) {
-            return new AuthResponseDto('', error instanceof Error ? error.message : String(error));
+            return new AuthResponseDto(new UserDto(), error instanceof Error ? error.message : String(error));
         }
     }
 
+    saveUserToLocalStorage(authResponseDto: AuthResponseDto): void {
+        localStorage.setItem(userIdKey, authResponseDto.user.id);
+        localStorage.setItem(userEmailKey, authResponseDto.user.email);
+        localStorage.setItem(userJwtKey, authResponseDto.user.jwt);
+    }
     logout() {
-        localStorage.removeItem('jwt');
+        localStorage.removeItem(userJwtKey);
     }
 
     isAuthenticated(): boolean {
-        const jwt = localStorage.getItem('jwt');
+        const jwt = localStorage.getItem(userJwtKey);
         return !!jwt;
     }
 
     getUserId(): string | null {
-        const decoded = this.getDecodedJwt();
-        return decoded?.sub || null;
-    }
-
-    getUserName(): string | null {
-        //const decoded = this.getDecodedJwt();
-        return '"My Name"';
+        return localStorage.getItem(userIdKey);
     }
 
     getUserEmail(): string | null {
-        const decoded = this.getDecodedJwt();
-        return decoded?.email || null;
-    }
-
-    getDecodedJwt(): CustomJwtPayload | null {
-        const jwt = this.getLocalJwt();
-        if (!jwt) {
-            return null;
-        }
-        try {
-            const decodedToken = jwtDecode<CustomJwtPayload>(jwt);
-            return decodedToken;
-        } catch (error) {
-            console.error('Failed to decode JWT:', error);
-            return null;
-        }
+        return localStorage.getItem(userEmailKey);
     }
 
     getAuthHeaders(): { Authorization: string } {
-        return { Authorization: `Bearer ${this.getLocalJwt()}` };
+        return { Authorization: `Bearer ${this.getUserJwt()}` };
     }
 
-    getLocalJwt(): string | null {
-        return localStorage.getItem('jwt');
+    getUserJwt(): string | null {
+        return localStorage.getItem(userJwtKey);
     }
 }

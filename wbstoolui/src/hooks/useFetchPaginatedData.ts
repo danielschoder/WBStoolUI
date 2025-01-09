@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PaginatedResponseDto } from '../dtos/PaginatedResponseDto';
-
-function getAuthHeaders(): { Authorization: string } {
-    return { Authorization: `Bearer ${localStorage.getItem('jwt')}` };
-}
+import { useServices } from './useServices';
 
 export function useFetchPaginatedData<T>(
     url: string,
@@ -14,18 +11,20 @@ export function useFetchPaginatedData<T>(
     refreshkey: number
 )
 {
+    const { authApiService } = useServices();
     const [data, setData] = useState<PaginatedResponseDto<T> | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const apiUrl = `${url}?pageNumber=${page}&pageSize=${pageSize}`;
-
         setLoading(true);
         setError(null);
 
+        const apiUrl = `${url}?pageNumber=${page}&pageSize=${pageSize}`;
+        const headers = { Authorization: `Bearer ${authApiService.getUserJwt()}` };
+
         axios
-            .get(apiUrl, { headers: getAuthHeaders() })
+            .get(apiUrl, { headers: headers })
             .then((response) => {
                 const instance = new PaginatedResponseDto<T>(response.data, itemsName);
                 setData(instance);
@@ -36,7 +35,7 @@ export function useFetchPaginatedData<T>(
             .finally(() => {
                 setLoading(false);
             });
-    }, [url, itemsName, page, pageSize, refreshkey]);
+    }, [authApiService, url, itemsName, page, pageSize, refreshkey]);
 
     return { data, loading, error };
 }

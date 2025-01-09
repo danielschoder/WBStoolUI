@@ -1,4 +1,5 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeftOutlined';
+import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import ListIcon from '@mui/icons-material/ListOutlined';
 import SettingsIcon from '@mui/icons-material/SettingsOutlined';
 import { Box, Divider, Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material';
@@ -13,7 +14,6 @@ interface DrawerComponentProps {
 const DrawerComponent: React.FC<DrawerComponentProps> = ({ drawerOpen, setDrawerOpen }) => {
     const menuItems = [
         { label: 'Task List', path: '/tasklist' },
-        { label: 'Persons & Roles', path: '/persons' }
     ];
 
     const handleDrawerClose = () => {
@@ -52,6 +52,15 @@ const DrawerComponent: React.FC<DrawerComponentProps> = ({ drawerOpen, setDrawer
                             />
                         </ListItem>
                     ))}
+                    <ListItem key='PersonsRoles' component={NavLink} to='/persons'>
+                        <Box sx={{ display: 'flex', alignItems: 'center', color: colourGrey }}>
+                            <GroupOutlinedIcon sx={{ mr: 1, color: 'inherit' }} />
+                            <ListItemText
+                                sx={{ color: 'inherit' }}
+                                primary='Persons & Roles'
+                            />
+                        </Box>
+                    </ListItem>
                     <ListItem key='ProjectSettings' component={NavLink} to='/project'>
                         <Box sx={{ display: 'flex', alignItems: 'center', color: colourGrey }}>
                             <SettingsIcon sx={{ mr: 1, color: 'inherit' }} />

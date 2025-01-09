@@ -1,9 +1,11 @@
+import { UserDto } from "./UserDto";
+
 export class AuthResponseDto {
-    jwt: string;
+    user: UserDto;
     errorMessage: string;
 
-    constructor(jwt: string = '', errorMessage: string = '') {
-        this.jwt = jwt;
+    constructor(user: UserDto, errorMessage: string) {
+        this.user = user;
         this.errorMessage = errorMessage;
     }
 }
