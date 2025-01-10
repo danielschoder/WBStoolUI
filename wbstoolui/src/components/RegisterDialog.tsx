@@ -22,9 +22,9 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
     };
 
     const handleRegisterSubmit = async () => {
-        const authResponse = await authApiService.register(registerForm);
-        if (authResponse.errorMessage) {
-            setErrorMessage(authResponse.errorMessage);
+        const error = await authApiService.register(registerForm);
+        if (error) {
+            setErrorMessage(error);
         } else {
             setRegisterForm(new RegisterDto());
             setErrorMessage('');
@@ -63,10 +63,10 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="primary">
+                <Button onClick={onClose} color="primary" title="Cancel">
                     Cancel
                 </Button>
-                <Button onClick={handleRegisterSubmit} color="primary">
+                <Button onClick={handleRegisterSubmit} color="primary" title="Register">
                     Register
                 </Button>
             </DialogActions>

@@ -21,7 +21,7 @@ export function useFetchPaginatedData<T>(
         setError(null);
 
         const apiUrl = `${url}?pageNumber=${page}&pageSize=${pageSize}`;
-        const headers = { Authorization: `Bearer ${authApiService.getUserJwt()}` };
+        const headers = authApiService.getAuthHeaders();
 
         axios
             .get(apiUrl, { headers: headers })

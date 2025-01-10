@@ -10,9 +10,13 @@ const Account: React.FC = () => {
     const [email, setEmail] = useState<string>(initialEmail);
     const isSaveDisabled = name == initialName && email == initialEmail;
 
-    const handleSave = () => {
-        console.log('Saved profile', { name, email });
-        // Add logic to save the data, e.g., API call
+    const handleSave = async () => {
+        if (email !== initialEmail) {
+            const userId = authApiService.getUserId();
+            if (userId) {
+                await authApiService.updateUserEmail(userId, email);
+            }
+        }
     };
 
     return (
@@ -34,6 +38,7 @@ const Account: React.FC = () => {
                     variant="contained"
                     onClick={handleSave}
                     disabled={isSaveDisabled}
+                    title="Save Account"
                 >
                     Save Account
                 </Button>

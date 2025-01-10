@@ -46,6 +46,7 @@ function Projects() {
                     color="primary"
                     startIcon={<AddIcon />}
                     onClick={handleAddProject}
+                    title="Create Project"
                 >
                     Create Project
                 </Button>
@@ -123,10 +124,10 @@ function Projects() {
                                 </DialogContentText>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={closeDeleteDialog} color="primary" autoFocus>
+                                <Button onClick={closeDeleteDialog} color="primary" title="Cancel" autoFocus>
                                     Cancel
                                 </Button>
-                                <Button onClick={confirmDeleteProject} color="error">
+                                <Button onClick={confirmDeleteProject} title="Delete" color="error">
                                     Delete
                                 </Button>
                             </DialogActions>

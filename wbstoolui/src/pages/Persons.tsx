@@ -53,6 +53,7 @@ const Persons = () => {
                             startIcon={<AddIcon />}
                             disabled={isNewPerson}
                             onClick={handleAddNewPerson}
+                            title="Add Person"
                         >
                             Add Person
                         </Button>

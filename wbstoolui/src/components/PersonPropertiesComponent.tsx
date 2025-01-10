@@ -86,19 +86,19 @@ const PersonPropertiesComponent: React.FC<PersonPropertiesComponentProps> = ({
 
             {isNewPerson ? (
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
-                    <Button variant="outlined" color="primary" sx={{ flex: 1 }} onClick={handleClose}>
+                    <Button variant="outlined" color="primary" title="Cancel" sx={{ flex: 1 }} onClick={handleClose}>
                         Cancel
                     </Button>
-                    <Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={handleAddNewPerson}>
+                    <Button variant="contained" color="primary" title="Add" sx={{ flex: 1 }} onClick={handleAddNewPerson}>
                         Add
                     </Button>
                 </Box>
             ) : (
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
-                        <Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={handleRemovePerson}>
+                        <Button variant="contained" color="primary" title="Remove Person" sx={{ flex: 1 }} onClick={handleRemovePerson}>
                             Remove Person
                         </Button>
-                        <Button variant="outlined" color="primary" sx={{ flex: 1 }} onClick={handleClose}>
+                        <Button variant="outlined" color="primary" title="Close" sx={{ flex: 1 }} onClick={handleClose}>
                             Close
                         </Button>
                     </Box>

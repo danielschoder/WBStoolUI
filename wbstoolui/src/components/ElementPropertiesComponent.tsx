@@ -102,13 +102,13 @@ const ElementPropertiesComponent: React.FC<ElementPropertiesComponentProps> = ({
             />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
-                <Button variant="contained" color="primary" sx={{ flex: 1 }} onClick={handleAddChild}>
+                <Button variant="contained" color="primary" title="Add Sub" sx={{ flex: 1 }} onClick={handleAddChild}>
                     Add Sub
                 </Button>
-                <Button variant="contained" color="primary" sx={{ flex: 1 }} disabled={!selectedElement?.parent} onClick={handleAddSibling}>
+                <Button variant="contained" color="primary" title="Add Next" sx={{ flex: 1 }} disabled={!selectedElement?.parent} onClick={handleAddSibling}>
                     Add Next
                 </Button>
-                <Button variant="contained" color="primary" sx={{ flex: 1 }} disabled={!selectedElement?.parent} onClick={handleDelete}>
+                <Button variant="contained" color="primary" title="Delete" sx={{ flex: 1 }} disabled={!selectedElement?.parent} onClick={handleDelete}>
                     Delete
                 </Button>
             </Box>

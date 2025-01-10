@@ -118,10 +118,10 @@ const AppBarComponent: React.FC<AppBarComponentProps> = ({
                         </>
                     ) : (
                         <>
-                            <Button color="inherit" onClick={() => setOpenLoginDialog(true)}>
+                            <Button color="inherit" title="Login" onClick={() => setOpenLoginDialog(true)}>
                                 Login
                             </Button>
-                            <Button color="inherit" onClick={() => setOpenRegisterDialog(true)}>
+                            <Button color="inherit" title="Register" onClick={() => setOpenRegisterDialog(true)}>
                                 Register
                             </Button>
                         </>

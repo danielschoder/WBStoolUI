@@ -64,10 +64,10 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose }) => {
                 )}
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} color="primary">
+                <Button onClick={onClose} color="primary" title="Cancel">
                     Cancel
                 </Button>
-                <Button onClick={handleLoginSubmit} color="primary">
+                <Button onClick={handleLoginSubmit} color="primary" title="Login">
                     Login
                 </Button>
             </DialogActions>
