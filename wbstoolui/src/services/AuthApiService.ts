@@ -3,10 +3,13 @@ import { baseUrlAuth } from '../constants';
 import { AuthResponseDto } from '../dtos/AuthResponseDto';
 import { LoginDto } from '../dtos/LoginDto';
 import { RegisterDto } from '../dtos/RegisterDto';
+import { UserUpdateDto } from '../dtos/UserUpdateDto';
+import { UserDto } from '../dtos/UserDto';
 
 const userIdKey: string = 'userId';
 const userEmailKey: string = 'userEmail';
 const userNameKey: string = 'userName';
+const userNickNameKey: string = 'userNickName';
 const userJwtKey: string = 'userJwt';
 
 export class AuthApiService {
@@ -42,6 +45,14 @@ export class AuthApiService {
         return !!jwt;
     }
 
+    public getUser(): UserDto {
+        const id = localStorage.getItem(userIdKey);
+        const email = localStorage.getItem(userEmailKey);
+        const name = localStorage.getItem(userNameKey);
+        const nickName = localStorage.getItem(userNickNameKey);
+        return new UserDto(id || '', email || '', name || '', nickName || '');
+    }
+
     public getUserId(): string | null {
         return localStorage.getItem(userIdKey);
     }
@@ -54,15 +65,24 @@ export class AuthApiService {
         return localStorage.getItem(userNameKey);
     }
 
-    public async updateUserEmail(userId: string, newEmail: string): Promise<void> {
+    public getUserNickName(): string | null {
+        return localStorage.getItem(userNickNameKey);
+    }
+
+    public async updateUser(userUpdateDto: UserUpdateDto): Promise<void> {
         const response = await axios.put(
             `${baseUrlAuth}/users`,
-            { id: userId, newEmail },
+            userUpdateDto,
             { headers: this.getAuthHeaders() }
         );
 
         if (response.status === 200) {
-            localStorage.setItem(userEmailKey, newEmail);
+            localStorage.setItem(userEmailKey, userUpdateDto.email);
+            localStorage.setItem(userNameKey, userUpdateDto.name);
+            localStorage.setItem(userNickNameKey, userUpdateDto.nickName);
+        }
+        else {
+            throw `${baseUrlAuth}/users error: ${response.status}`
         }
     }
 

@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Container } from '@mui/material';
 import { useServices } from '../hooks/useServices';
+import { UserUpdateDto } from '../dtos/UserUpdateDto';
+import { UserDto } from '../dtos/UserDto';
 
 const Account: React.FC = () => {
     const { authApiService } = useServices();
-    const initialName = authApiService.getUserName() || '';
-    const initialEmail = authApiService.getUserEmail() || '';
-    const [name, setName] = useState<string>(initialName);
-    const [email, setEmail] = useState<string>(initialEmail);
-    const isSaveDisabled = name == initialName && email == initialEmail;
+    const [initialUser, setInitialUser] = useState<UserDto | null>(authApiService.getUser());
+    const [user, setUser] = useState<UserDto | null>(initialUser);
+    const isSaveDisabled =
+        user &&
+        initialUser &&
+        user.email === initialUser.email &&
+        user.name === initialUser.name &&
+        user.nickName === initialUser.nickName || false;
 
     const handleSave = async () => {
-        if (email !== initialEmail) {
-            const userId = authApiService.getUserId();
-            if (userId) {
-                await authApiService.updateUserEmail(userId, email);
-            }
+        if (user) {
+            await authApiService.updateUser(new UserUpdateDto(user.email, user.name, user.nickName));
+            setInitialUser({ ...user });
         }
+    };
+
+    const handleFieldChange = (field: keyof UserDto, value: string) => {
+        setUser((prevUser) => prevUser ? { ...prevUser, [field]: value } : null);
     };
 
     return (
@@ -24,15 +31,20 @@ const Account: React.FC = () => {
             <Typography variant="h4" sx={{ mt: 2, mb: 2 }}>My Account</Typography>
             <Box component="form" sx={{ display: 'flex', flexDirection: 'column', maxWidth: '50%', gap: 2 }}>
                 <TextField
-                    label="Name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-                <TextField
                     label="Email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={user?.email || ''}
+                    onChange={(e) => handleFieldChange('email', e.target.value.toLowerCase())}
+                />
+                <TextField
+                    label="Name"
+                    value={user?.name || ''}
+                    onChange={(e) => handleFieldChange('name', e.target.value)}
+                />
+                <TextField
+                    label="NickName"
+                    value={user?.nickName || ''}
+                    onChange={(e) => handleFieldChange('nickName', e.target.value)}
                 />
                 <Button
                     variant="contained"

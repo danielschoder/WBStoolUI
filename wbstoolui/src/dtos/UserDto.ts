@@ -1,6 +1,9 @@
 export class UserDto {
-    id: string = '';
-    email: string = '';
-    name: string = '';
-    jwt: string = '';
+    constructor(
+        public id: string = '',
+        public email: string = '',
+        public name: string = '',
+        public nickName: string = '',
+        public jwt: string = ''
+    ) { }
 }
