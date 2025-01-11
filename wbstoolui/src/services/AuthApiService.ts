@@ -3,10 +3,8 @@ import { baseUrlAuth } from '../constants';
 import { AuthResponseDto } from '../dtos/AuthResponseDto';
 import { LoginDto } from '../dtos/LoginDto';
 import { RegisterDto } from '../dtos/RegisterDto';
-import { UserUpdateDto } from '../dtos/UserUpdateDto';
 import { UserDto } from '../dtos/UserDto';
 
-const userIdKey: string = 'userId';
 const userEmailKey: string = 'userEmail';
 const userNameKey: string = 'userName';
 const userNickNameKey: string = 'userNickName';
@@ -46,51 +44,40 @@ export class AuthApiService {
     }
 
     public getUser(): UserDto {
-        const id = localStorage.getItem(userIdKey);
         const email = localStorage.getItem(userEmailKey);
         const name = localStorage.getItem(userNameKey);
         const nickName = localStorage.getItem(userNickNameKey);
-        return new UserDto(id || '', email || '', name || '', nickName || '');
-    }
-
-    public getUserId(): string | null {
-        return localStorage.getItem(userIdKey);
+        return new UserDto(email || '', name || '', nickName || '');
     }
 
     public getUserEmail(): string | null {
         return localStorage.getItem(userEmailKey);
     }
 
-    public getUserName(): string | null {
-        return localStorage.getItem(userNameKey);
-    }
-
-    public getUserNickName(): string | null {
-        return localStorage.getItem(userNickNameKey);
-    }
-
-    public async updateUser(userUpdateDto: UserUpdateDto): Promise<void> {
+    public async updateUser(userDto: UserDto): Promise<void> {
         const response = await axios.put(
             `${baseUrlAuth}/users`,
-            userUpdateDto,
+            userDto,
             { headers: this.getAuthHeaders() }
         );
 
         if (response.status === 200) {
-            localStorage.setItem(userEmailKey, userUpdateDto.email);
-            localStorage.setItem(userNameKey, userUpdateDto.name);
-            localStorage.setItem(userNickNameKey, userUpdateDto.nickName);
+            this.saveUserDataToLocalStorage(userDto);
         }
         else {
             throw `${baseUrlAuth}/users error: ${response.status}`
         }
     }
 
-    private saveUserToLocalStorage(authResponseDto: AuthResponseDto): void {
-        localStorage.setItem(userIdKey, authResponseDto.user.id);
-        localStorage.setItem(userEmailKey, authResponseDto.user.email);
-        localStorage.setItem(userNameKey, authResponseDto.user.name);
-        localStorage.setItem(userJwtKey, authResponseDto.user.jwt);
+    private saveAuthToLocalStorage(userDto: UserDto): void {
+        localStorage.setItem(userJwtKey, userDto.jwt);
+        this.saveUserDataToLocalStorage(userDto);
+    }
+
+    private saveUserDataToLocalStorage(userDto: UserDto): void {
+        localStorage.setItem(userEmailKey, userDto.email);
+        localStorage.setItem(userNameKey, userDto.name);
+        localStorage.setItem(userNickNameKey, userDto.nickName);
     }
 
     private getUserJwt(): string | null {
@@ -115,7 +102,7 @@ export class AuthApiService {
                 if (authResponseDto.errorMessage) {
                     return authResponseDto.errorMessage;
                 }
-                this.saveUserToLocalStorage(authResponseDto);
+                this.saveAuthToLocalStorage(authResponseDto.user);
                 return null;
             } else if (response.status === 401) {
                 return 'Email/password invalid.';

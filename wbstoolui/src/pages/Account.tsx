@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, TextField, Button, Typography, Container } from '@mui/material';
 import { useServices } from '../hooks/useServices';
-import { UserUpdateDto } from '../dtos/UserUpdateDto';
 import { UserDto } from '../dtos/UserDto';
 
 const Account: React.FC = () => {
@@ -17,7 +16,7 @@ const Account: React.FC = () => {
 
     const handleSave = async () => {
         if (user) {
-            await authApiService.updateUser(new UserUpdateDto(user.email, user.name, user.nickName));
+            await authApiService.updateUser(user);
             setInitialUser({ ...user });
         }
     };
